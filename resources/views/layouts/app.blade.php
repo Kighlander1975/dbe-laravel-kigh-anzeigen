@@ -6,15 +6,10 @@
     <title>@yield('title', 'Kigh-Anzeigen')</title>
 </head>
 <body>
-    <header>
-        <nav>
-        </nav>
-    </header>
+    @include('layouts.header')
 
     <main>@yield('content')</main>
 
-    <footer>
-
-    </footer>
+    @include('layouts.footer')
 </body>
 </html>
