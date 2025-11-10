@@ -21,7 +21,11 @@ export default defineConfig({
   plugins: [
     laravel({
       // Falls du Blade nutzt, stelle sicher, dass @vite(...) verwendet wird
-      input: ['resources/css/header.css', 'resources/css/footer.css'],
+      input: [
+        'resources/css/header.css', 
+        'resources/css/footer.css',
+        'resources/css/components/listings.css'
+      ],
       refresh: true,
     }),
     tailwindcss(),

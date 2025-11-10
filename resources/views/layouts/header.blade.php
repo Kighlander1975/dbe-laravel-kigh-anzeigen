@@ -1,13 +1,13 @@
 <header>
     <div class="logos" title="Zur Startseite">
-        <a href="{{ route('listings.index') }}">
+        <a href="{{ route('home') }}">
             <img src="{{ asset('images/kigh-anzeigen003-logo.png') }}" alt="Kigh-Anzeigen Logo" />
             <img src="{{ asset('images/LogoText.png') }}" alt="Kigh-Anzeigen Logo Text" />
         </a>
     </div>
 
     <div class="suche">
-        <form class="suche-eingaben" action="" method="GET">
+        <form class="suche-eingaben" action="{{ route('listings.index') }}" method="GET">
             <input type="text" name="what" id="what" placeholder="Was suchst Du?" />
             <span class="trenner">|</span>
             <input type="text" name="where" id="where" placeholder="PLZ oder Ort" />

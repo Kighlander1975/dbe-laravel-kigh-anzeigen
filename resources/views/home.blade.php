@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="de">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Kigh-Anzeigen</title>
-</head>
+@section('title', 'Kigh-Anzeigen - Der Kleinanzeigenmarkt von Kighlander')
 
-<body>
-    <h1>Willkommen auf Kigh-Anzeigen!</h1>
-    <p>Dies ist die Home Seite.</p>
-</body>
-
-</html>
+@section('content')
+    <h1>Alle Angebote</h1>
+    <div class="listings-container">
+        @foreach ($listings as $listing)
+            <x-listing-card :listing="$listing" />
+        @endforeach
+    </div>
+@endsection

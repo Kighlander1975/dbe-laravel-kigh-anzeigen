@@ -1,6 +1,6 @@
 <footer>
     <div class="logos">
-        <a href="{{ route('listings.index') }}">
+        <a href="{{ route('home') }}">
             <img src="{{ asset('images/kigh-anzeigen003-logo.png') }}" alt="Kigh-Anzeigen Logo" />
             <img src="{{ asset('images/LogoText.png') }}" alt="Kigh-Anzeigen Logo Text" />
         </a>
