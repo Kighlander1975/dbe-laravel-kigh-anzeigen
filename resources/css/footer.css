@@ -1,122 +1,177 @@
+/* Basis (Mobile-First) */
 footer {
-    border-top: 10px solid #1cb1b1;
-    background-color: #e4f1f1;
-    margin: 2rem 0;
-    padding: 1rem 0;
-
-    /* Zeilen-Layout für 4 Spalten */
-    display: flex;
-    justify-content: space-around; /* verteilt Spalten mit Raum */
-    align-items: stretch;          /* alle Spalten gleiche Höhe */
-    gap: 2rem;                     /* Abstand zwischen Spalten */
+  border-top: 10px solid #1cb1b1;
+  background-color: #e4f1f1;
+  margin: 1rem 0;             /* weniger Außenabstand auf Mobile */
+  padding: 1rem 0.75rem;      /* kompakter Innenabstand */
+  display: flex;
+  flex-direction: column;     /* mobil gestapelt */
+  align-items: stretch;
+  gap: 1rem;
 }
 
-/* Direkte Kinder (4 Spalten) */
+/* Direkte Kinder (Sektionen) */
 footer > div {
-    flex: 1 1 0;                  /* gleiche Breite */
-    display: flex;                 /* Spalte selbst als Flex-Container */
-    flex-direction: column;        /* Inhalte vertikal */
-    align-items: flex-start;       /* links ausrichten */
-    justify-content: flex-start;   /* Inhalte oben beginnen */
-    min-height: 100%;
-    padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;                /* kompakter vertikaler Abstand */
+  padding: 0 0.25rem;         /* kleine seitliche Luft */
+}
+
+/* Typografie optimieren */
+footer, 
+footer p, 
+footer li, 
+footer a, 
+footer h3 {
+  line-height: 1.4;
+}
+footer h3 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  color: #0b4b4b;
 }
 
 /* Listen-Reset */
 footer ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* Logos-Spalte */
-footer .logos {
-    padding: 10px 20px;
-}
-footer .logos a {
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-}
-footer .logos img {
-    height: 50px;
-    margin-right: 20px;
-}
-footer .logos img:last-child {
-    position: relative;
-    top: 3px;
-    left: -10px;
-}
-
-/* Headings */
-footer h3 {
-    margin-bottom: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Abstand nur für Listen in company und disclaimer, NICHT für Social-Icons */
 footer .company > ul li + li,
 footer .disclaimer > ul li + li {
-    margin-top: 0.5rem;
+  margin-top: 0.4rem;
 }
 
-/* Social-Icons zentrieren und sauber ausrichten */
-footer .socials .social-icons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-}
-footer .socials .social-icons ul {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0;
-}
-footer .socials .social-icons ul li a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-footer .socials .social-icons ul li a img {
-    width: 28px;
-    height: 28px;
-    display: block;
-}
-
-/* Copyright unter den Icons zentrieren */
-footer .socials .social-icons p {
-    margin: 1rem 0 0;
-    opacity: 0.8;
-    font-size: 0.9rem;
-}
-
-/* Responsive – unter schmaler Breite stapeln */
-@media (max-width: 900px) {
-    footer {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-    }
-    footer > div {
-        padding: 0.5rem 1rem;
-    }
-}
-
-/* Links in Unternehmen und Rechtliches: ohne Unterstrich, mit leichter Bewegung beim Hover */
+/* Links – besser klickbar auf Touch */
 footer .company > ul a,
 footer .disclaimer > ul a {
-    text-decoration: none;
-    color: #0b4b4b;
-    transition: transform 0.2s ease, text-decoration-color 0.2s ease, color 0.2s ease;
-    display: inline-block; /* nötig, damit transform wirkt */
+  text-decoration: none;
+  color: #0b4b4b;
+  display: inline-block;
+  padding: 4px 2px;                /* Touch-Fläche leicht erhöhen */
+  transition: transform 0.2s ease, text-decoration-color 0.2s ease, color 0.2s ease;
 }
-
-/* Hover: Unterstrich einblenden und max. 5px nach rechts schieben */
+footer .company > ul a:active,
+footer .disclaimer > ul a:active {
+  transform: translateX(2px);      /* dezenter auf Mobile */
+}
 footer .company > ul a:hover,
 footer .disclaimer > ul a:hover {
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    transform: translateX(4px); /* bis max. 5px, hier 4px angenehm */
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transform: translateX(3px);
+}
+
+/* Logos – flexibler und kleiner auf Mobile */
+footer .logos {
+  padding: 6px 10px;
+}
+footer .logos a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;                 /* verhindert Überlauf */
+}
+footer .logos img {
+  height: 36px;                    /* kleiner auf Mobile */
+  width: auto;
+  margin: 0;
+}
+footer .logos img:last-child {
+  position: relative;
+  top: 2px;
+  left: -6px;
+}
+
+/* Social-Icons – gut tippbar, automatisch umbrechend */
+footer .socials .social-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+footer .socials .social-icons ul {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+footer .socials .social-icons ul li a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;                    /* komfortable Touch-Zone */
+  height: 40px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+footer .socials .social-icons ul li a:hover {
+  background-color: rgba(12, 139, 139, 0.1);
+}
+footer .socials .social-icons ul li a:active {
+  transform: scale(0.98);
+}
+footer .socials .social-icons ul li a img {
+  width: 24px;                    /* etwas kleiner, dafür mit Padding */
+  height: 24px;
+  display: block;
+}
+footer .socials .social-icons p {
+  margin: 0.5rem 0 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+  text-align: center;             /* auf Mobile zentriert */
+  width: 100%;
+}
+
+/* Sehr kleine Geräte: Ränder weiter reduzieren */
+@media (max-width: 380px) {
+  footer {
+    padding: 0.75rem 0.5rem;
+  }
+  footer .logos img {
+    height: 32px;
+  }
+}
+
+/* Tablet: etwas großzügiger */
+@media (min-width: 600px) and (max-width: 899px) {
+  footer {
+    gap: 1.25rem;
+    padding: 1.25rem 1rem;
+  }
+  footer h3 {
+    font-size: 1.05rem;
+  }
+  footer .socials .social-icons ul {
+    gap: 0.6rem;
+  }
+}
+
+/* Ab 900px – 4 Spalten nebeneinander wie zuvor */
+@media (min-width: 900px) {
+  footer {
+    margin: 2rem 0;
+    padding: 1rem 0;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: stretch;
+    gap: 2rem;
+  }
+  footer > div {
+    flex: 1 1 0;
+    min-height: 100%;
+    padding: 0 0.5rem;
+  }
+  footer .logos img {
+    height: 50px;
+  }
+  footer .socials .social-icons p {
+    text-align: left;
+  }
 }

@@ -1,113 +1,163 @@
-/* Layout */
+/* Überschrift */
 main h1 {
-    text-align: center;
+  text-align: center;
+  margin: 0.5rem 0 0;
 }
 
+/* Container – Mobile First */
 main .listings-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* immer 5 Karten */
-    gap: 1rem;
-    width: 95%;
-    margin: 1rem auto 0;
+  display: grid;
+  /* Automatisches, responsives Grid:
+     - Karten min 220px breit (passt für Inhalt/Buttons)
+     - Füllt die Zeile, wächst bis 1fr */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;                 /* kompakter auf Mobile */
+  width: min(100%, 1200px);     /* harte Maxbreite, passt sich an */
+  padding: 0 0.75rem;           /* Innenabstand statt 95%-Breite */
+  margin: 1rem auto 0;
 }
 
 /* Link um die ganze Karte */
 main .listings-container .listing-card-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;          /* für sichtbaren :focus-Ring */
 }
 
 /* Karte */
 main .listings-container .listing-card-link .listing-card {
-    min-height: 15rem;
-    border: 2px solid #1cb1b1;
-    border-radius: 10px;
-    background: #fff;
-    overflow: hidden; /* Rundungen sauber halten */
-    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  min-height: 15rem;
+  border: 2px solid #1cb1b1;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;             /* Rundungen sauber halten */
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  will-change: transform, box-shadow, border-color;
 }
 
 main .listings-container .listing-card-link:hover .listing-card,
 main .listings-container .listing-card-link:focus-visible .listing-card {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,.08);
-    border-color: #18a3a3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  border-color: #18a3a3;
 }
 
 /* Bildbereich */
 main .listing-card .listing-card-image {
-    width: 100%;
-    height: 9rem;
-    border-radius: 10px 10px 0 0;
-    overflow: hidden;
-    background: #f3f6f6;
+  width: 100%;
+  height: 9rem;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  background: #f3f6f6;
 }
 
 main .listing-card .listing-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Header/Title mit Clamp */
 main .listing-card .listing-card-header {
-    padding: .5rem .5rem .375rem;
-    min-height: 4.5rem; /* stabilisiert Höhe */
-    background-color: #e4f1f1;
-    border-top: 1px solid #1cb1b1;
-    border-bottom: 1px solid #1cb1b1;
+  padding: .5rem .5rem .375rem;
+  min-height: 4.5rem; /* stabilisiert Höhe */
+  background-color: #e4f1f1;
+  border-top: 1px solid #1cb1b1;
+  border-bottom: 1px solid #1cb1b1;
 }
 
 main .listing-card .listing-card-header h2 {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.3;
-    color: #000;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;  /* max. 2 Zeilen */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  margin: 0;
+  font-size: clamp(.95rem, 2.5vw, 1rem); /* etwas flexibler */
+  line-height: 1.3;
+  color: #000;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;       /* max. 2 Zeilen */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Body */
 main .listing-card .listing-card-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: .5rem;
-    padding: .5rem;
-    min-height: 2.5rem;
-    background-color: #fff;
-    border-radius: 0 0 10px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem;
+  min-height: 2.75rem;          /* etwas höher für Touch */
+  background-color: #fff;
+  border-radius: 0 0 10px 10px;
 }
 
 /* Ort */
 main .listing-card .listing-card-body .listing-ort {
-    display: flex;
-    align-items: center;
-    gap: .25rem;
-    color: #7d8a8a;
-    font-size: .9rem;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  color: #7d8a8a;
+  font-size: .95rem;
+  min-width: 0;                 /* erlaubt Trunkierung */
 }
 
 main .listing-card .listing-card-body .listing-ort img {
-    width: 1rem;
-    height: 1rem;
-    display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+}
+
+main .listing-card .listing-card-body .listing-ort span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Preis */
 main .listing-card .listing-card-body .listing-price {
-    color: #1cb1b2;
-    font-weight: 700;
-    font-size: 1.125rem;
-    white-space: nowrap;
+  color: #1cb1b2;
+  font-weight: 700;
+  font-size: 1.125rem;
+  white-space: nowrap;
 }
 
 /* Fokus sichtbar für Tastatur-Nutzer */
 main .listings-container .listing-card-link:focus-visible {
-    outline: 3px solid #90e0e0;
-    border-radius: 12px;
+  outline: 3px solid #90e0e0;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* Kleine Geräte: dichteres Grid, kleinere Bildhöhe */
+@media (max-width: 380px) {
+  main .listings-container {
+    grid-template-columns: 1fr;       /* 1 Spalte für sehr enge Screens */
+    gap: 0.6rem;
+    padding: 0 0.5rem;
+  }
+  main .listing-card .listing-card-image {
+    height: 8rem;
+  }
+}
+
+/* Tablets: etwas größerer Gap, breitere Karten möglich */
+@media (min-width: 600px) and (max-width: 1023px) {
+  main .listings-container {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  main .listing-card .listing-card-image {
+    height: 9.5rem;
+  }
+}
+
+/* Große Screens: max 5 Spalten, schöner Rhythmus */
+@media (min-width: 1200px) {
+  main .listings-container {
+    grid-template-columns: repeat(5, 1fr); /* fix 5 wie ursprünglich */
+    gap: 1.125rem;
+    width: 95%;
+    padding: 0;                           /* folgt deinem ursprünglichen Layout */
+  }
 }

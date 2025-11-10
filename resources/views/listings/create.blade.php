@@ -8,11 +8,11 @@
     @csrf
     <input type="hidden" name="customer_id" value="1">
     <label>Name:</label>
-    <input type="text" name="name" required>
+    <input type="text" name="name">
     <label>Beschreibung:</label>
-    <textarea name="beschreibung" required></textarea>
+    <textarea name="beschreibung"></textarea>
     <label>Preis:</label>
-    <input type="number" step="0.01" name="preis" required>
+    <input type="number" step="0.01" name="preis">
     <button type="submit">Erstellen</button>
 </form>
 <a href="{{ route('listings.index') }}">Zurück</a>

@@ -45,7 +45,7 @@ class ListingController extends Controller
         ]);
 
         // Benutzer zur Übersichtsseite weiterleiten
-        return redirect('/listings');
+        return redirect('/listings')->with('success','Das Listing wurde erstellt.');
     }
 
     /**

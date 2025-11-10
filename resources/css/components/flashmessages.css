@@ -1,0 +1,111 @@
+/* Container: zentriert, mit max-Breite und Abstand zum Inhalt */
+.flash-message-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 12px;
+  margin: 12px 0;
+}
+
+/* Nachricht: flex für Icon + Text + Close, gut lesbar */
+.flash-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 920px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+  border: 1px solid transparent;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+}
+
+/* Icons (optional): platzhalter für <span class="flash-icon">…</span> */
+.flash-message .flash-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1em;
+  height: 1.1em;
+}
+
+/* Textbereich: darf umbrechen */
+.flash-message .flash-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Close-Button (optional) */
+.flash-message .flash-close {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.9;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+}
+.flash-message .flash-close:hover {
+  opacity: 1;
+  background: rgba(255,255,255,0.15);
+}
+
+/* Zustände */
+.flash-message.success {
+  background: #e8f7ee;
+  color: #215c2b;
+  border-color: #bde7c9;
+}
+.flash-message.error {
+  background: #fdecea;
+  color: #7a1b16;
+  border-color: #f6c7c1;
+}
+.flash-message.info {
+  background: #e9f2ff;
+  color: #0d3a66;
+  border-color: #c7dcff;
+}
+.flash-message.warning {
+  background: #fff7e6;
+  color: #6a4a0a;
+  border-color: #ffe1a6;
+}
+
+/* Akzent-Links in der Message */
+.flash-message a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Ein-/Ausblenden Animationen (Klassen per JS toggeln) */
+.flash-message.is-entering {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+.flash-message.is-entered {
+  opacity: 1;
+  transform: translateY(0);
+}
+.flash-message.is-exiting {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Kompakter auf sehr kleinen Screens */
+@media (max-width: 380px) {
+  .flash-message {
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+}

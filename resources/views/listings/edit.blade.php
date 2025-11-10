@@ -8,11 +8,11 @@
         @csrf
         @method('PUT')
         <label>Name:</label>
-        <input type="text" name="name" value="{{ $listing->name }}" required>
+        <input type="text" name="name" value="{{ $listing->name }}" >
         <label>Beschreibung:</label>
-        <textarea name="beschreibung" required>{{ $listing->beschreibung }}</textarea>
+        <textarea name="beschreibung">{{ $listing->beschreibung }}</textarea>
         <label>Preis:</label>
-        <input type="number" step="0.01" name="preis" value="{{ $listing->preis }}" required>
+        <input type="number" step="0.01" name="preis" value="{{ $listing->preis }}">
         <button type="submit">Speichern</button>
     </form>
     <a href="{{ route('listings.index') }}">Zurück</a>
