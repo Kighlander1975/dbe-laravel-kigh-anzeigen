@@ -34,7 +34,8 @@ export default defineConfig({
         'resources/css/components/listings.css',
         'resources/css/components/flashmessages.css',
         'resources/css/main.css',
-        'resources/css/components/show_listing.css'
+        'resources/css/components/show_listing.css',
+        'resources/js/mein_js.js'
         // Optional später: eine zentrale resources/css/app.css mit @import verwenden
       ],
       refresh: true,

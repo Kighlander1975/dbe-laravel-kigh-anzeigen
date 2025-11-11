@@ -1,3 +1,4 @@
+{{-- app.blade.php --}}
 <!DOCTYPE html>
 <html lang="de">
 
@@ -22,6 +23,9 @@
     <main>@yield('content')</main>
 
     @include('layouts.footer')
+    @vite([
+        'resources/js/mein_js.js'
+    ])
 </body>
 
 </html>

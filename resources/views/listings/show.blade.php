@@ -3,12 +3,11 @@
 @section('title', 'Listing anzeigen - Kigh-Anzeigen')
 
 @section('content')
-    <h1>{{ $listing->name }}</h1>
 
-    <img src="{{ $listing->first_image_url }}" alt="{{ $listing->name }}" width="400">
+    <!-- <img src="{{ $listing->first_image_url }}" alt="{{ $listing->name }}" width="400"> -->
 
-    <p>{{ $listing->beschreibung }}</p>
-    <p>Preis: {{ number_format($listing->preis, 2, ',', '.') }} €</p>
+    {{-- Dump-Komponente mit allen Rohdaten --}}
+    <x-listing-show-details :listing="$listing" :customer="$customer" />
 
     @php
         $fallback = route('home');
@@ -34,6 +33,6 @@
         }
     @endphp
 
-    <a href="{{ $href }}" class="back-link">← Zurück zur Übersicht</a>
+    <a  href="{{ $href }}" class="btn btn-outline-primary back-link">← Zurück zur Übersicht</a>
 
 @endsection

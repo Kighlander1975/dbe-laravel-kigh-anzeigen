@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Listing;
+use Illuminate\Support\Facades\DB;
 
 class ListingController extends Controller
 {
@@ -53,7 +54,14 @@ class ListingController extends Controller
     public function show(Listing $listing)
     {
         $listing->load('images');
-        return view('listings.show', compact('listing'));
+
+        // Customer manuell laden (Variante A)
+        $customer = null;
+        if (!empty($listing->customer_id)) {
+            $customer = DB::table('customers')->where('id', $listing->customer_id)->first();
+        }
+
+        return view('listings.show', compact('listing', 'customer'));
     }
 
     /**
