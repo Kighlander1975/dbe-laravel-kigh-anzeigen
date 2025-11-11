@@ -1,0 +1,488 @@
+main {
+    width: 95%;
+    margin: 0 auto;
+}
+main > p {
+    text-align: center;
+}
+
+/* Buttons – Basis
+   Beispiel (HTML):
+   <button class="btn">Standard</button>
+   <button class="btn" data-wsize="8rem" data-fsize="1rem" data-pad=".4rem .75rem">Individuell</button>
+*/
+.btn {
+    /* Default-Variablen (greifen ohne Attribute) */
+    --btn-min-w: 5.5rem;
+    --btn-pad: 0.25rem 0.5rem;
+    --btn-radius: 5px;
+    --btn-fsize: 0.9rem;
+    --btn-line: 1.2;
+
+    display: inline-block;
+    min-width: var(--btn-min-w) !important;
+    padding: var(--btn-pad);
+    border: 1px solid transparent; /* für Outline-Varianten */
+    border-radius: var(--btn-radius);
+    font-size: var(--btn-fsize);
+    line-height: var(--btn-line);
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease,
+        border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+/* Optional: Attribute auslesen (moderne Browser).
+   Falls ein Attribut nicht existiert, bleibt der Default erhalten. */
+.btn[data-wsize] {
+    --btn-min-w: attr(data-wsize size);
+} /* z. B. 8rem, 160px */
+.btn[data-pad] {
+    --btn-pad: attr(data-pad);
+} /* z. B. ".4rem .75rem" */
+.btn[data-radius] {
+    --btn-radius: attr(data-radius length);
+}
+.btn[data-fsize] {
+    --btn-fsize: attr(data-fsize length);
+}
+.btn[data-line] {
+    --btn-line: attr(data-line number);
+}
+
+/* Power-User: Alternativ kann man inline Variablen setzen:
+   <button class="btn" style="--btn-min-w: 10rem">…</button>
+   (keine Änderung im CSS nötig)
+*/
+
+/* Solide Varianten nach deiner Palette */
+.btn-primary {
+    background-color: #1cb1b1;
+    color: #fff;
+    border-color: #1cb1b1;
+}
+.btn-primary:hover {
+    background-color: #18a3a3;
+    border-color: #18a3a3;
+}
+.btn-primary:active {
+    background-color: #159495;
+    border-color: #159495;
+}
+
+.btn-secondary {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+.btn-secondary:hover {
+    background-color: #006ee6;
+    border-color: #006ee6;
+}
+.btn-secondary:active {
+    background-color: #0062cc;
+    border-color: #0062cc;
+}
+
+.btn-info {
+    background-color: #5cdeff;
+    color: #003344; /* besserer Kontrast auf hellem Cyan */
+    border-color: #5cdeff;
+}
+.btn-info:hover {
+    background-color: #3fd6ff;
+    border-color: #3fd6ff;
+}
+.btn-info:active {
+    background-color: #22ceff;
+    border-color: #22ceff;
+}
+
+.btn-warning {
+    background-color: #fccd4b;
+    color: #2a2100; /* dunkler Text für Lesbarkeit */
+    border-color: #fccd4b;
+}
+.btn-warning:hover {
+    background-color: #f9c536;
+    border-color: #f9c536;
+}
+.btn-warning:active {
+    background-color: #f7bc20;
+    border-color: #f7bc20;
+}
+
+.btn-danger {
+    background-color: #ff4a3e;
+    color: #fff;
+    border-color: #ff4a3e;
+}
+.btn-danger:hover {
+    background-color: #f23e32;
+    border-color: #f23e32;
+}
+.btn-danger:active {
+    background-color: #e5362a;
+    border-color: #e5362a;
+}
+
+/* Hover/Active – globales Feedback ohne Opacity-Verlust */
+.btn:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Outline-Varianten */
+.btn-outline-primary {
+    background: transparent;
+    color: #1cb1b1;
+    border-color: #1cb1b1;
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:active {
+    background-color: #1cb1b1;
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: #007bff;
+    border-color: #007bff;
+}
+.btn-outline-secondary:hover,
+.btn-outline-secondary:active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-outline-info {
+    background: transparent;
+    color: #0b7c94;
+    border-color: #5cdeff;
+}
+.btn-outline-info:hover,
+.btn-outline-info:active {
+    background-color: #5cdeff;
+    color: #003344;
+}
+
+.btn-outline-warning {
+    background: transparent;
+    color: #5c4300;
+    border-color: #fccd4b;
+}
+.btn-outline-warning:hover,
+.btn-outline-warning:active {
+    background-color: #fccd4b;
+    color: #2a2100;
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: #ff4a3e;
+    border-color: #ff4a3e;
+}
+.btn-outline-danger:hover,
+.btn-outline-danger:active {
+    background-color: #ff4a3e;
+    color: #fff;
+}
+
+/* Links als Buttons */
+a.btn {
+    text-decoration: none;
+}
+
+/* States & A11y */
+.btn:focus-visible {
+    outline: 2px solid #90e0e0;
+    outline-offset: 2px;
+}
+.btn:disabled,
+.btn.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* -------------------------------------------------------
+   ICON-BUTTONS
+-------------------------------------------------------- */
+
+/* Basis: quadratisch, kompakt, mittig, ohne Textumbruch */
+.btn-icon {
+    /* Defaults (greifen ohne Attribute) */
+    --btn-size: 2rem; /* Basisgröße: 32px */
+    --btn-radius: 6px; /* Eckenradius */
+    --icon-size: 1.1rem; /* sichtbare Icon-Größe */
+    --gap: 0; /* kein Text, kein Gap */
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: var(--btn-size);
+    height: var(--btn-size);
+    min-width: var(--btn-size);
+    min-height: var(--btn-size);
+
+    border: 1px solid transparent;
+    border-radius: var(--btn-radius);
+
+    background: #e9eef1; /* neutrale Basis, wird in Varianten überschrieben */
+    color: #223; /* Icon-Farbe bei SVG mit currentColor irrelevant, bei <img> nicht */
+    cursor: pointer;
+
+    transition: background-color 0.15s ease, color 0.15s ease,
+        border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease,
+        opacity 0.15s ease;
+}
+
+/* Optionale Datenattribute für Icon-Buttons */
+.btn-icon[data-size] {
+    --btn-size: attr(data-size size);
+} /* z. B. 40px, 2.5rem */
+.btn-icon[data-radius] {
+    --btn-radius: attr(data-radius length);
+} /* z. B. 8px, .5rem */
+.btn-icon[data-ic] {
+    --icon-size: attr(data-ic length);
+} /* z. B. 1.25rem */
+.btn-icon[data-gap] {
+    --gap: attr(data-gap length);
+} /* falls Text daneben wäre */
+
+/* Beispiel-Icon-Größe anwenden, falls ein inneres SVG o. ä. vorhanden ist */
+.btn-icon > svg,
+.btn-icon .icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
+/* Hinweis:
+   - Defaults funktionieren ohne jedes data-Attribut.
+   - Wenn ein data-Attribut gesetzt ist, überschreibt es nur die jeweilige Variable.
+   - In älteren Browsern ohne attr()-Support greifen weiterhin die Default-Variablen.
+   - Optionaler Weg: inline Variablen (style="--btn-size: 40px") für maximale Kompatibilität. */
+
+/* Für Icons, die per <img> eingebunden sind */
+.btn-icon > img {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    object-fit: contain;
+    display: block;
+    /* Tipp: Wenn deine SVGs monochrom sind, kannst du sie in CSS nicht einfärben.
+     Für färbbare Icons lieber inline-SVG nutzen, das currentColor respektiert. */
+}
+
+/* Hover/Active Feedback */
+.btn-icon:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.btn-icon:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Focus sichtbar (A11y) */
+.btn-icon:focus-visible {
+    outline: 2px solid #90e0e0;
+    outline-offset: 2px;
+}
+
+/* Disabled */
+.btn-icon:disabled,
+.btn-icon.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Größenvarianten */
+.btn-icon--sm {
+    --btn-size: 1.75rem; /* 28px */
+    --icon-size: 1rem;
+    --btn-radius: 6px;
+}
+.btn-icon--md {
+    /* identisch zur Basis, hier zur Klarheit */
+    --btn-size: 2rem; /* 32px */
+    --icon-size: 1.1rem;
+}
+.btn-icon--lg {
+    --btn-size: 2.5rem; /* 40px */
+    --icon-size: 1.25rem;
+    --btn-radius: 8px;
+}
+
+/* Runde Variante (z. B. für „Floating Icon Buttons“) */
+.btn-icon--round {
+    --btn-radius: 999px;
+}
+
+/* Farbvarianten – solide */
+.btn-icon--primary {
+    background-color: #1cb1b1;
+    border-color: #1cb1b1;
+    color: #fff;
+}
+.btn-icon--primary:hover {
+    background-color: #18a3a3;
+    border-color: #18a3a3;
+}
+.btn-icon--primary:active {
+    background-color: #159495;
+    border-color: #159495;
+}
+
+.btn-icon--secondary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+.btn-icon--secondary:hover {
+    background-color: #006ee6;
+    border-color: #006ee6;
+}
+.btn-icon--secondary:active {
+    background-color: #0062cc;
+    border-color: #0062cc;
+}
+
+.btn-icon--info {
+    background-color: #5cdeff;
+    border-color: #5cdeff;
+    color: #003344;
+}
+.btn-icon--info:hover {
+    background-color: #3fd6ff;
+    border-color: #3fd6ff;
+}
+.btn-icon--info:active {
+    background-color: #22ceff;
+    border-color: #22ceff;
+}
+
+.btn-icon--warning {
+    background-color: #fccd4b;
+    border-color: #fccd4b;
+    color: #2a2100;
+}
+.btn-icon--warning:hover {
+    background-color: #f9c536;
+    border-color: #f9c536;
+}
+.btn-icon--warning:active {
+    background-color: #f7bc20;
+    border-color: #f7bc20;
+}
+
+.btn-icon--danger {
+    background-color: #ff4a3e;
+    border-color: #ff4a3e;
+    color: #fff;
+}
+.btn-icon--danger:hover {
+    background-color: #f23e32;
+    border-color: #f23e32;
+}
+.btn-icon--danger:active {
+    background-color: #e5362a;
+    border-color: #e5362a;
+}
+
+/* Farbvarianten – Outline */
+.btn-icon--outline-primary {
+    background: transparent;
+    color: #1cb1b1;
+    border-color: #1cb1b1;
+}
+.btn-icon--outline-primary:hover,
+.btn-icon--outline-primary:active {
+    background-color: rgba(28, 177, 177, 0.1);
+}
+
+.btn-icon--outline-secondary {
+    background: transparent;
+    color: #007bff;
+    border-color: #007bff;
+}
+.btn-icon--outline-secondary:hover,
+.btn-icon--outline-secondary:active {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.btn-icon--outline-info {
+    background: transparent;
+    color: #0b7c94;
+    border-color: #5cdeff;
+}
+.btn-icon--outline-info:hover,
+.btn-icon--outline-info:active {
+    background-color: rgba(92, 222, 255, 0.12);
+}
+
+.btn-icon--outline-warning {
+    background: transparent;
+    color: #5c4300;
+    border-color: #fccd4b;
+}
+.btn-icon--outline-warning:hover,
+.btn-icon--outline-warning:active {
+    background-color: rgba(252, 205, 75, 0.14);
+}
+
+.btn-icon--outline-danger {
+    background: transparent;
+    color: #ff4a3e;
+    border-color: #ff4a3e;
+}
+.btn-icon--outline-danger:hover,
+.btn-icon--outline-danger:active {
+    background-color: rgba(255, 74, 62, 0.1);
+}
+
+/* Optional: leichte Mikro-Interaktion nur fürs Icon-Bild */
+.btn-icon > img {
+    transition: transform 0.12s ease;
+}
+.btn-icon:hover > img {
+    transform: translateY(-1px);
+}
+.btn-icon:active > img {
+    transform: translateY(0);
+}
+
+/* =========================================
+   HTML-Beispiele (nur Referenz)
+   -----------------------------------------
+   1) Solide, mittlere Größe, quadratisch
+   <button class="btn-icon btn-icon--md btn-icon--primary" aria-label="Suchen">
+     <img src="/icons/search.svg" alt="">
+   </button>
+
+   2) Outline, klein, rund
+   <button class="btn-icon btn-icon--sm btn-icon--round btn-icon--outline-secondary" aria-label="Einstellungen">
+     <img src="/icons/settings.svg" alt="">
+   </button>
+
+   3) Link als Icon-Button
+   <a href="/notifications" class="btn-icon btn-icon--md btn-icon--outline-info" aria-label="Benachrichtigungen">
+     <img src="/icons/bell.svg" alt="">
+   </a>
+
+   4) Große Warnung, nur Icon
+   <button class="btn-icon btn-icon--lg btn-icon--warning" aria-label="Warnung">
+     <img src="/icons/alert.svg" alt="">
+   </button>
+
+   A11y-Hinweise:
+   - Immer ein aussagekräftiges aria-label setzen, weil das <img>-alt leer ist.
+   - Leere alt-Attribute bei rein dekorativem Icon (<img alt="">), Screenreader lesen dann nur das aria-label.
+   - Für Toggle-States zusätzlich aria-pressed="true|false" nutzen (wenn sinnvoll).
+   ========================================= */

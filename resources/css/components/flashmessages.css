@@ -69,6 +69,9 @@
   color: #7a1b16;
   border-color: #f6c7c1;
 }
+.flash-message.error ul {
+  list-style-type: none;
+}
 .flash-message.info {
   background: #e9f2ff;
   color: #0d3a66;

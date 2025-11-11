@@ -12,7 +12,7 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $listings = Listing::latest()->get();
+        $listings = Listing::with('images')->latest()->get();
         return view('listings.index', compact('listings'));
     }
 
@@ -29,30 +29,30 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        // Validierung der Formulardaten
-        $request->validate([
-            'name'          => 'required',
-            'beschreibung'  => 'required',
-            'preis'         => 'required|numeric',
+        $data = $request->validate([
+            'customer_id'   => 'required|exists:customers,id',
+            'name'          => 'required|string|max:255',
+            'beschreibung'  => 'required|string',
+            'preis'         => 'required|numeric|min:0',
         ]);
 
-        // Neues Listing in der Datenbank speichern
         Listing::create([
-            'customer_id' => auth()->id() || $request->customer_id,
-            'name'=> $request->name,
-            'beschreibung' => $request->beschreibung,
-            'preis' => $request->preis
+            'customer_id'  => auth()->id() ?? $data['customer_id'],
+            'name'         => $data['name'],
+            'beschreibung' => $data['beschreibung'],
+            'preis'        => $data['preis'],
         ]);
 
-        // Benutzer zur Übersichtsseite weiterleiten
-        return redirect('/listings')->with('success','Das Listing wurde erstellt.');
+        return redirect()->route('listings.index')->with('success', 'Das Listing wurde erstellt.');
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(Listing $listing)
     {
+        $listing->load('images');
         return view('listings.show', compact('listing'));
     }
 
@@ -70,12 +70,12 @@ class ListingController extends Controller
     public function update(Request $request, Listing $listing)
     {
         $request->validate([
-            'name'=> 'required',
+            'name' => 'required',
             'beschreibung' => 'required',
             'preis' => 'required|numeric',
         ]);
 
-        $listing->update($request->only(['name', 'beschreibung','preis']));
+        $listing->update($request->only(['name', 'beschreibung', 'preis']));
 
         return redirect('/listings/' .  $listing->id);
     }

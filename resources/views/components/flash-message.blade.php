@@ -14,7 +14,7 @@
             <div class="flash-message error">
                 <ul>
                     @foreach ($errors->all() as $error)
-                        {{ $error }}
+                        <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>

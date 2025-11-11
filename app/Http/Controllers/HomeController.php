@@ -8,7 +8,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $listings = Listing::latest()->get();
+        $listings = Listing::with('images')->latest()->get();
         return view('home', compact('listings'));
     }
 }

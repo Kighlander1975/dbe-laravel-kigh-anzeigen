@@ -10,7 +10,9 @@
         'resources/css/header.css', 
         'resources/css/footer.css', 
         'resources/css/components/listings.css',
-        'resources/css/components/flashmessages.css'
+        'resources/css/components/flashmessages.css',
+        'resources/css/components/show_listing.css',
+        'resources/css/main.css'
     ])
 </head>
 

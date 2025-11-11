@@ -122,6 +122,18 @@ main .listing-card .listing-card-body .listing-price {
   white-space: nowrap;
 }
 
+.with-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem; /* sorgt für konsistenten Abstand */
+}
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 0.5rem;                   /* verhindert, dass Buttons aneinanderkleben */
+  flex-wrap: wrap;               /* bricht auf sehr schmalen Screens um */
+}
 /* Fokus sichtbar für Tastatur-Nutzer */
 main .listings-container .listing-card-link:focus-visible {
   outline: 3px solid #90e0e0;
