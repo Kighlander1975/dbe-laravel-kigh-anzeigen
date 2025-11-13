@@ -7,7 +7,7 @@
     </div>
 
     <div class="suche">
-        <form class="suche-eingaben" action="{{ route('listings.index') }}" method="GET">
+        <form class="suche-eingaben" action="{{ route('home') }}" method="GET">
             <input type="text" name="what" id="what" placeholder="Was suchst Du?" />
             <span class="trenner">|</span>
             <input type="text" name="where" id="where" placeholder="PLZ oder Ort" />
@@ -20,6 +20,16 @@
             <li><a href="#"><img src="{{ asset('images/profile.svg') }}" alt="Profil"></a></li>
             <li><a href="#"><img src="{{ asset('images/create_listing.svg') }}" alt=""></a></li>
             <li><a href="#"><img src="{{ asset('images/heart.svg') }}" alt=""></a></li>
+            @if (auth()->check())
+                <li>
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">
+                        @csrf
+                    </form>
+                    <a href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img
+                            src="{{ asset('images/logout.svg') }}" alt="" width="38"></a>
+                </li>
+            @endif
         </ul>
     </div>
 </header>

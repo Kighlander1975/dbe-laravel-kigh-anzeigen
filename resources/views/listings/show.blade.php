@@ -27,7 +27,7 @@
         $cameFromEdit = $prevPath && strpos($prevPath, '/edit') !== false;
 
         if ($usePrev && $cameFromEdit) {
-            $href = route('listings.index');
+            $href = route('home');
         } else {
             $href = $usePrev ? $prev : $fallback;
         }

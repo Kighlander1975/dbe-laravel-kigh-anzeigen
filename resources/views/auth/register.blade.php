@@ -1,52 +1,102 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('layouts.app')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+@section('title', 'Registrierung - Kigh-Anzeigen')
+
+@section('content')
+    <div class="auth-container register">
+        <div class="auth-header">
+            <h1>Registrieren</h1>
+            <p>Erstelle dein Konto und starte direkt durch</p>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="auth-form register">
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                <div class="form-grid">
+                    <!-- Linke Spalte -->
+                    <div class="form-col">
+                        <!-- Name -->
+                        <div class="auth-field"
+                            style="--icon-url: url('{{ asset('images/auth/auth-profile.svg') }}'); --icon-color:#1cb1b1;">
+                            <span class="icon-mask" aria-hidden="true"></span>
+                            <input type="text" name="name" required placeholder="Name" value="{{ old('name') }}">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="auth-field"
+                            style="--icon-url: url('{{ asset('images/auth/auth-mail.svg') }}'); --icon-color:#1cb1b1;">
+                            <span class="icon-mask" aria-hidden="true"></span>
+                            <input type="email" name="email" required placeholder="E-Mail-Adresse"
+                                value="{{ old('email') }}">
+                        </div>
+
+                        <!-- Passwort -->
+                        <div class="auth-field"
+                            style="--icon-url: url('{{ asset('images/auth/auth-unlock.svg') }}'); --icon-color:#1cb1b1;">
+                            <span class="icon-mask" aria-hidden="true"></span>
+                            <input type="password" name="password" minlength="8" required
+                                placeholder="Passwort (min. 8 Zeichen)">
+                        </div>
+
+                        <!-- Passwort bestätigen -->
+                        <div class="auth-field"
+                            style="--icon-url: url('{{ asset('images/auth/auth-unlock.svg') }}'); --icon-color:#1cb1b1;">
+                            <span class="icon-mask" aria-hidden="true"></span>
+                            <input type="password" name="password_confirmation" minlength="8" required
+                                placeholder="Passwort bestätigen">
+                        </div>
+                    </div>
+
+                    <!-- Rechte Spalte -->
+                    <div class="form-col">
+                        <!-- Straße + Hausnummer als ein kombiniertes Feld -->
+                        <div class="auth-field auth-field-inline"
+                            style="--icon-url: url('{{ asset('images/auth/auth-home.svg') }}'); --icon-color:#1cb1b1;">
+                            <span class="icon-mask" aria-hidden="true"></span>
+                            <div class="input-duo" role="group" aria-label="Straße und Hausnummer">
+                                <input type="text" name="strasse" required placeholder="Straße"
+                                    value="{{ old('strasse') }}" class="street">
+                                <input type="text" name="hausnummer" placeholder="HsNr." value="{{ old('hausnummer') }}"
+                                    class="hsnr" inputmode="text" autocomplete="address-line2">
+                            </div>
+                        </div>
+
+
+                        <!-- PLZ + Ort in einer Zeile (als ein gemeinsamer Block) -->
+                        <div class="auth-field-combo">
+                            <!-- PLZ mit Icon -->
+                            <div class="auth-field is-narrow"
+                                style="--icon-url: url('{{ asset('images/auth/auth-home.svg') }}'); --icon-color:#1cb1b1;">
+                                <span class="icon-mask" aria-hidden="true"></span>
+                                <input type="text" name="plz" required placeholder="PLZ" value="{{ old('plz') }}"
+                                    inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}" maxlength="5">
+                            </div>
+
+                            <!-- Ort OHNE Icon -->
+                            <div class="auth-field no-icon">
+                                <input type="text" name="ort" required placeholder="Ort" value="{{ old('ort') }}"
+                                    autocomplete="address-level2">
+                            </div>
+                        </div>
+
+
+                        <!-- Telefon -->
+                        <div class="auth-field"
+                            style="--icon-url: url('{{ asset('images/auth/auth-phone.svg') }}'); --icon-color:#1cb1b1;">
+                            <span class="icon-mask" aria-hidden="true"></span>
+                            <input type="text" name="telefonnummer" required placeholder="Telefonnummer"
+                                value="{{ old('telefonnummer') }}">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Registrieren</button>
+            </form>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="auth-footer">
+            <p>Schon ein Konto? <a href="{{ route('login') }}" class="register-links">Zum Login</a></p>
         </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+@endsection

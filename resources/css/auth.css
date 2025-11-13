@@ -1,0 +1,436 @@
+/* =============================================================================
+   Auth styles (Login + Register)
+   Desktop-first, lean comments
+   ========================================================================== */
+
+/* Root variables */
+:root {
+  /* Sizes */
+  --field-h: 44px;
+  --pad-x: 16px;
+  --radius: 22px;
+
+  /* Spacing */
+  --gap-field: 2.5rem;
+  --gap-grid: 2rem;
+  --gap-row: 1.25rem;
+
+  /* Borders & focus */
+  --border: 1px solid #ddd;
+  --focus-ring: 0 0 0 3px rgba(255, 59, 48, 0.15);
+
+  /* Icons */
+  --icon-box: var(--field-h);
+  --icon-size: 60%;
+  --icon-gap: 8px;
+  --icon-color: #9aa0a6;
+  --icon-color-focus: #ff4a3e;
+
+  /* Buttons */
+  --btn-login-bg: #1cb1b1;
+  --btn-login-hover: #18a1a1;
+  --btn-register-bg: #ff4a3e;
+  --btn-register-hover: #ff4a3ecc;
+  --btn-color: #fff;
+  --btn-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
+  --btn-shadow-hover: 0 4px 14px rgba(0, 0, 0, 0.14);
+
+  /* Motion */
+  --t-fast: 160ms;
+  --t-medium: 200ms;
+  --e-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Width */
+  --field-w-default: 360px;
+
+  /* Inline-duo */
+  --hsnr-w: 84px; /* default house number width */
+}
+
+/* =============================================================================
+   Container & structure
+   ========================================================================== */
+.auth-container {
+  width: 50%;
+  margin: 5rem auto 3rem;
+  padding: 2rem 5rem;
+  border: 2px solid #1cb1b1;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.auth-container.register {
+  width: 75%;
+  padding: 2rem 2rem 2.5rem;
+  border-color: #ff4a3e;
+}
+
+.auth-header { text-align: center; margin-bottom: 1.5rem; }
+.auth-header h1 { color: #1cb1b1; }
+.auth-container.register .auth-header h1 { color: #ff4a3e; }
+.auth-header p { color: #000; font-weight: bold; }
+
+.auth-footer { text-align: center; margin-top: 1.5rem; }
+.auth-footer p {
+    margin-bottom: 0.75rem;
+}
+
+.login-links,
+.register-links {
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  transform-origin: center;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.login-links { color: #f7281e; }
+.register-links { color: #1cb1b1; }
+@media (hover: hover) and (pointer: fine) {
+  .login-links:hover,
+  .register-links:hover { transform: scale(1.06); }
+}
+
+/* =============================================================================
+   Form context widths
+   ========================================================================== */
+.auth-form.login {
+  --field-w-default: 32rem;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.auth-form.register {
+  --field-w-default: 480px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* =============================================================================
+   Field layout
+   ========================================================================== */
+.auth-form .auth-field {
+  display: grid;
+  grid-template-columns: var(--icon-box) 1fr;
+  align-items: center;
+  column-gap: var(--icon-gap);
+  height: var(--field-h);
+  margin-bottom: var(--gap-field);
+  width: var(--field-w, var(--field-w-default));
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-form .auth-field input,
+.auth-form .auth-field select,
+.auth-form .auth-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--pad-x);
+  border-radius: var(--radius);
+  border: var(--border);
+  background: #fff;
+  color: #111;
+  font: inherit;
+  line-height: 1;
+  outline: none;
+  appearance: none;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.06);
+  transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease;
+}
+
+/* Subtle placeholders */
+.auth-form ::placeholder {
+  color: rgba(0,0,0,0.35);
+}
+.auth-form :-ms-input-placeholder { color: rgba(0,0,0,0.35); } /* IE legacy */
+.auth-form ::-ms-input-placeholder { color: rgba(0,0,0,0.35); }
+
+/* Focus */
+.auth-form .auth-field:focus-within .icon-mask {
+  background-color: var(--icon-color-focus);
+  transform: scale(1.18);
+  filter: drop-shadow(0 2px 4px rgba(255, 59, 48, 0.25));
+}
+.auth-form .auth-field:focus-within input,
+.auth-form .auth-field:focus-within select,
+.auth-form .auth-field:focus-within textarea {
+  border-color: var(--icon-color-focus);
+  box-shadow: var(--focus-ring);
+}
+
+/* Icons (CSS mask) */
+.auth-form .icon-mask {
+  width: var(--icon-box);
+  height: var(--icon-box);
+  display: inline-block;
+  background-color: var(--icon-color);
+  -webkit-mask-image: var(--icon-url);
+  mask-image: var(--icon-url);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: var(--icon-size);
+  mask-size: var(--icon-size);
+  transform-origin: center;
+  transition:
+    background-color var(--t-fast) ease,
+    transform var(--t-medium) var(--e-smooth),
+    filter var(--t-fast) ease;
+}
+
+/* Field modifiers */
+.auth-form .auth-field.is-wide   { --field-w: 520px; }
+.auth-form .auth-field.is-narrow { --field-w: 300px; }
+
+/* =============================================================================
+   Buttons
+   ========================================================================== */
+.auth-form .btn {
+  display: block;
+  height: var(--field-h);
+  padding: 0 calc(var(--pad-x) + 8px);
+  border-radius: var(--radius);
+  border: none;
+  color: var(--btn-color);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) ease,
+    transform var(--t-fast) ease,
+    box-shadow var(--t-medium) ease;
+}
+
+.auth-form.login .btn {
+  width: calc(0.75 * var(--field-w, var(--field-w-default)));
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--btn-login-bg);
+  box-shadow: var(--btn-shadow);
+}
+.auth-form.login .btn:hover {
+  background: var(--btn-login-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.auth-form.login .btn:active {
+  transform: translateY(1px);
+  box-shadow: var(--btn-shadow);
+}
+
+.auth-form.register .btn {
+  width: var(--field-w, var(--field-w-default));
+  max-width: 100%;
+  background: var(--btn-register-bg);
+  box-shadow: var(--btn-shadow);
+}
+.auth-form.register .btn:hover {
+  background: var(--btn-register-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.auth-form.register .btn:active {
+  transform: translateY(1px);
+  box-shadow: var(--btn-shadow);
+}
+
+/* Disabled */
+.auth-form .btn:disabled,
+.auth-form .btn[aria-disabled="true"] {
+  background: #b8e7e7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* If register button sits outside grid */
+.auth-form.register > form > .btn {
+  display: block;
+  margin: 0 auto;
+  width: var(--field-w, var(--field-w-default));
+  max-width: 100%;
+}
+
+/* =============================================================================
+   Register grid
+   ========================================================================== */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-grid);
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto 2rem;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.form-grid .form-col { min-width: 0; }
+.form-grid .form-col > .auth-field { min-width: 0; }
+
+/* Utility: two-column row */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-row);
+  width: 100%;
+  max-width: 100%;
+  margin: -0.5rem 0 2rem;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.field-row .auth-field {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+/* =============================================================================
+   ZIP + City combo
+   ========================================================================== */
+.auth-field-combo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: var(--field-w, var(--field-w-default));
+  max-width: 100%;
+  margin-bottom: var(--gap-field);
+  box-sizing: border-box;
+}
+.auth-field-combo > .auth-field {
+  --field-w: auto;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 0;
+  min-width: 0;
+}
+.auth-field-combo .auth-field.no-icon { grid-template-columns: 1fr !important; }
+.auth-field-combo .auth-field.no-icon .icon-mask { display: none !important; }
+
+/* =============================================================================
+   A11y: reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .auth-form .icon-mask,
+  .auth-form .auth-field input,
+  .auth-form .auth-field select,
+  .auth-form .auth-field textarea,
+  .auth-form .btn {
+    transition: none !important;
+  }
+  .auth-form .auth-field:focus-within .icon-mask {
+    transform: none;
+    filter: none;
+  }
+}
+
+/* =============================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 900px) {
+  .auth-container {
+    width: 95%;
+    padding: 2rem;
+  }
+  .auth-form.login { width: 100%; }
+
+  /* Register: single column */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* =============================================================================
+   Street + house number inline duo (one visual field)
+   ========================================================================== */
+.auth-form .auth-field.auth-field-inline { /* inherits base layout */ }
+
+.auth-form .auth-field.auth-field-inline .input-duo {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  height: 100%;
+  border-radius: var(--radius);
+  border: var(--border);
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.06);
+  overflow: hidden; /* clean inner divider corners */
+  transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease;
+}
+
+.auth-form .auth-field.auth-field-inline .input-duo input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  line-height: 1;
+  padding: 0 var(--pad-x);
+  height: 100%;
+  box-shadow: none;
+}
+
+/* House number: fixed width, centered */
+.auth-form .auth-field.auth-field-inline .input-duo .hsnr {
+  width: var(--hsnr-w);
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: relative;
+}
+
+/* Inner divider */
+.auth-form .auth-field.auth-field-inline .input-duo .hsnr::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: #e6e6e6;
+}
+
+/* Unified focus */
+.auth-form .auth-field.auth-field-inline:focus-within .input-duo {
+  border-color: var(--icon-color-focus);
+  box-shadow: var(--focus-ring);
+}
+
+/* =============================================================================
+   Register mobile tweaks
+   ========================================================================== */
+@media (max-width: 600px) {
+  /* tighter container paddings on register */
+  .auth-container.register {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* reduce vertical gaps between fields */
+  .auth-form.register .auth-field { margin-bottom: 1.25rem; }
+  .auth-form.register .auth-field.is-wide,
+  .auth-form.register .auth-field.is-narrow { margin-bottom: 1.25rem; }
+  .auth-form.register .auth-field-combo { margin-bottom: 1.25rem; }
+
+  /* grid gaps tighter */
+  .auth-form.register .form-grid { gap: 1rem; }
+  .auth-form.register .field-row { gap: 0.75rem; margin: -0.25rem 0 1.25rem; }
+
+  /* icons ~25% smaller and closer to inputs */
+  .auth-form.register {
+    --icon-size: 45%;   /* was 60% */
+    --icon-gap: 6px;    /* was 8px, brings icon closer */
+    --icon-box: 36px;   /* reduce box to keep vertical centering tighter */
+  }
+
+  /* keep inputs visually balanced with smaller icon box */
+  .auth-form.register .auth-field { height: 42px; }
+
+  /* inline duo height alignment */
+  .auth-form.register .auth-field.auth-field-inline .input-duo { height: 42px; }
+
+  /* register button spacing a bit tighter */
+  .auth-form.register .btn { margin-top: 0.25rem; }
+}
