@@ -15,7 +15,8 @@ class Listing extends Model
         'customer_id',
         'name',
         'beschreibung',
-        'preis'
+        'preis',
+        'category_id',
     ];
 
     // Zentrales Fallback-Bild (liegt in public/images)
@@ -55,5 +56,10 @@ class Listing extends Model
                 ? asset('storage/listing_images/' . $path)
                 : asset(self::PLACEHOLDER);
         });
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

@@ -14,6 +14,12 @@
         <label for="name">Name:</label>
         <input id="name" type="text" name="name" value="{{ old('name', $listing->name) }}">
 
+        <select name="category_id" required>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
+
         <label for="beschreibung">Beschreibung:</label>
         <textarea id="beschreibung" name="beschreibung">{{ old('beschreibung', $listing->beschreibung) }}</textarea>
 
