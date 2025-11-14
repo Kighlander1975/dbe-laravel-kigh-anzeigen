@@ -9,13 +9,19 @@
 
         <input type="hidden" name="customer_id" value="1" />
         <label for="name">Name:</label>
-        <input id="name" type="text" name="name" value="{{ old('name') }}" >
+        <input id="name" type="text" name="name" value="{{ old('name') }}">
+
+        <select name="category_id" required>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
 
         <label for="beschreibung">Beschreibung:</label>
         <textarea id="beschreibung" name="beschreibung" rows="5">{{ old('beschreibung') }}</textarea>
 
         <label for="preis">Preis (€):</label>
-        <input id="preis" type="number" name="preis" step="0.01" value="{{ old('preis') }}" >
+        <input id="preis" type="number" name="preis" step="0.01" value="{{ old('preis') }}">
 
         <button type="submit">Erstellen</button>
     </form>

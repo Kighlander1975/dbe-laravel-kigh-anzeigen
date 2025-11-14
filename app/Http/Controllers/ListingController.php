@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Listing;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,8 @@ class ListingController extends Controller
      */
     public function create()
     {
-        return view('listings.create');
+        $categories = Category::all();
+        return view('listings.create', compact('categories'));
     }
 
     /**
@@ -30,21 +32,23 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'customer_id'   => 'required|exists:customers,id',
-            'name'          => 'required|string|max:255',
-            'beschreibung'  => 'required|string',
-            'preis'         => 'required|numeric|min:0',
+   
+        // Validierung der Formulardaten
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'beschreibung' => 'required',
+            'preis' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
         ]);
-
-        Listing::create([
-            'customer_id'  => auth()->id() ?? $data['customer_id'],
-            'name'         => $data['name'],
-            'beschreibung' => $data['beschreibung'],
-            'preis'        => $data['preis'],
-        ]);
-
-        return redirect()->route('listings.index')->with('success', 'Das Listing wurde erstellt.');
+   
+        // Customer ID hinzufügen
+        $validatedData['customer_id'] = auth()->id();
+   
+        // Neues Listing in der Datenbank speichern
+        Listing::create($validatedData);
+   
+        // Benutzer zur Übersichtsseite weiterleiten
+        return redirect()->route('home')->with('success', 'Artikel erfolgreich erstellt!');
     }
 
 
@@ -69,7 +73,8 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
-        return view('listings.edit', compact('listing'));
+        $categories = Category::all();
+        return view('listings.edit', compact(['listing','categories']));
     }
 
     /**
@@ -81,11 +86,12 @@ class ListingController extends Controller
             'name' => 'required',
             'beschreibung' => 'required',
             'preis' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
-        $listing->update($request->only(['name', 'beschreibung', 'preis']));
+        $listing->update($request->only(['name', 'beschreibung', 'preis', 'category_id']));
 
-        return redirect('/listings/' .  $listing->id);
+        return redirect('/listings/' .  $listing->id)->with('success', 'Artikel erfolgreich aktualisiert!');
     }
 
     /**

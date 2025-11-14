@@ -2,12 +2,14 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 
-const hmrHost = 'schulung.fritz.box';    // vom Handy/anderen PCs erreichbar
-const localAppHost = 'kigh-anzeigen.loc'; // lokal auf dem Schulungsrechner
+// Vom Handy/anderen PCs erreichbar (DNS-Name oder LAN-IP)
+const hmrHost = 'schulung.fritz.box';
+// Deine App-Hostnamen, von der aus die Seite geladen wird
+const localAppHost = 'kigh-anzeigen.loc';
 
 export default defineConfig({
   server: {
-    host: '0.0.0.0',      // lauscht auf allen Interfaces (wichtig fürs LAN)
+    host: '0.0.0.0', // lauscht auf allen Interfaces (LAN)
     port: 5173,
     strictPort: true,
     cors: {
@@ -15,19 +17,19 @@ export default defineConfig({
         `http://${localAppHost}`,
         `http://${hmrHost}`,
       ],
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PUT,', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-      credentials: true
+      credentials: true,
     },
     hmr: {
-      host: hmrHost,      // HMR-Host muss im LAN auflösbar sein
+      host: hmrHost, // Hostname, den Clients im LAN erreichen
       port: 5173,
-      protocol: 'http'
-    }
+      protocol: 'ws', // für Vite-HMR ist ws üblich; http funktioniert teils, ws ist robuster
+    },
   },
   plugins: [
     laravel({
-      // Falls du Blade nutzt, stelle sicher, dass @vite(...) verwendet wird
+      // Stelle sicher, dass @vite([...]) diese Inputs nutzt
       input: [
         'resources/css/header.css',
         'resources/css/footer.css',
@@ -35,8 +37,10 @@ export default defineConfig({
         'resources/css/components/flashmessages.css',
         'resources/css/main.css',
         'resources/css/components/show_listing.css',
-        'resources/js/mein_js.js'
-        // Optional später: eine zentrale resources/css/app.css mit @import verwenden
+        'resources/css/auth.css',
+        'resources/css/profile.css',
+        'resources/js/mein_js.js',
+        // Tipp: Langfristig eine zentrale resources/css/app.css mit @import nutzen
       ],
       refresh: true,
     }),

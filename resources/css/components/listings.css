@@ -171,5 +171,6 @@ main .listings-container .listing-card-link:focus-visible {
     gap: 1.125rem;
     width: 95%;
     padding: 0;                           /* folgt deinem ursprünglichen Layout */
+    width: 1200px;
   }
 }
