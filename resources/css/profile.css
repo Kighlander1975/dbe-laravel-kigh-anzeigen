@@ -1,0 +1,158 @@
+/* Design-Variablen (leicht anpassbar) */
+:root {
+  --container-max: 1200px;
+  --gap-xl: 4rem;
+  --gap-lg: 3rem;
+  --gap-md: 1.5rem;
+  --gap-sm: 1rem;
+  --pad-xs: .125rem;
+  --pad-sm: .5rem;
+  --radius-sm: .25rem;
+  --border: 1px solid #ddd;
+  --accent: #1cb1b1;
+}
+
+/* Layout-Container */
+.profile-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Kopfbereich mit Profil-Infos + Passwort ändern */
+.profile-details {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap-xl);
+  margin-bottom: var(--gap-lg);
+  flex: 1;
+}
+
+/* Spaltenbreiten */
+.profile-infos { width: 65%; }
+.change-password { width: 40%; }
+
+/* Formular-Boxen (gemeinsam) */
+.profile-info-form,
+.change-password-form {
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+/* Profil-Infos Formular Layout */
+.profile-info-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 210px; /* statt fixer Höhe, verhindert Überlauf */
+}
+
+/* Gemeinsame Form-Gruppen Zeilen-Layout */
+.input-container,
+.change-password-form > div,
+.profile-input-left div,
+.profile-input-right div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+/* Abstände im oberen Formular */
+.input-container {
+  margin-bottom: var(--gap-sm);
+}
+
+.profile-input-left,
+.profile-input-right {
+  padding-top: var(--pad-sm);
+  width: 48%;
+}
+
+.profile-input-left { padding-left: var(--pad-sm); }
+.profile-input-right { padding-right: var(--pad-sm); }
+
+.profile-input-left div { margin-bottom: var(--gap-md); }
+.profile-input-left div:last-child { margin-bottom: 0; }
+
+/* Labels konsistent */
+.profile-input-left div > label,
+.profile-input-right div > label,
+.change-password-form div > label {
+  font-weight: bold;
+}
+
+/* Sichtbarkeit der rechten Labels (wie zuvor) */
+.profile-input-right div > label { visibility: hidden; }
+.profile-input-right div:first-child > label { visibility: visible; }
+
+/* Eingabefelder – Baseline */
+.input-container input,
+.change-password-form div > input {
+  border: var(--border);
+  padding: var(--pad-xs);
+}
+
+/* Eingabefeld-Breiten in Profil-Infos */
+.input-container input { width: 60%; }
+.input-container .profile-input-right input { width: 60%; }
+
+/* Eingabefeld-Breite im Passwortformular */
+.change-password-form div > input { width: 40%; }
+
+/* Padding der Passwort-Form-Zeilen */
+.change-password-form > div { padding: var(--pad-sm); }
+
+/* Footer-Button-Zeile in der Passwort-Form */
+.change-password-form > div:last-child {
+  justify-content: center;
+  margin-top: var(--gap-md);
+  margin-bottom: .5rem;
+}
+
+/* Button in Profil-Infos formularzentriert halten */
+.profile-info-form button {
+  max-width: 75%;
+  align-self: center;
+  margin-bottom: var(--gap-sm);
+}
+
+/* Listen/Favoriten-Abstände */
+.profile-favorites {
+  margin-top: 2rem;
+}
+
+/* Responsives Feintuning (optional, ohne bestehendes Verhalten zu brechen) */
+@media (max-width: 900px) {
+  .profile-details {
+    flex-direction: column;
+    gap: var(--gap-lg);
+  }
+  .profile-infos,
+  .change-password {
+    width: 100%;
+  }
+
+  .input-container {
+    flex-direction: column;
+    gap: var(--gap-sm);
+  }
+  .profile-input-left,
+  .profile-input-right {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .input-container input,
+  .input-container .profile-input-right input {
+    width: 60%; /* beibehaltener Charakter, nicht 100% um Layout beizubehalten */
+  }
+}
+
+/* Kleine visuelle Robustheit (keine Funktionsänderung) */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  box-sizing: border-box;
+}

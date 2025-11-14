@@ -10,6 +10,11 @@
                 {{ session('error') }}
             </div>
         @endif
+        @if (session('info'))
+            <div class="flash-message info">
+                {{ session('info') }}
+            </div>
+        @endif
         @if ($errors->any())
             <div class="flash-message error">
                 <ul>

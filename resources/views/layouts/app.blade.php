@@ -14,6 +14,7 @@
         'resources/css/components/flashmessages.css',
         'resources/css/components/show_listing.css',
         'resources/css/auth.css',
+        'resources/css/profile.css',
         'resources/css/main.css'
     ])
 </head>

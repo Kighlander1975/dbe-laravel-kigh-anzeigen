@@ -8,28 +8,60 @@
 
     <div class="suche">
         <form class="suche-eingaben" action="{{ route('home') }}" method="GET">
-            <input type="text" name="what" id="what" placeholder="Was suchst Du?" />
+            <input type="text" name="what" id="what" placeholder="Was suchst Du?" value="{{ request('what') }}" />
             <span class="trenner">|</span>
-            <input type="text" name="where" id="where" placeholder="PLZ oder Ort" />
+            <input type="text" name="where" id="where" placeholder="PLZ oder Ort" value="{{ request('where') }}" />
             <input type="submit" value="Suchen" />
         </form>
     </div>
 
     <div class="customer-menu">
         <ul>
-            <li><a href="#"><img src="{{ asset('images/profile.svg') }}" alt="Profil"></a></li>
-            <li><a href="#"><img src="{{ asset('images/create_listing.svg') }}" alt=""></a></li>
-            <li><a href="#"><img src="{{ asset('images/heart.svg') }}" alt=""></a></li>
-            @if (auth()->check())
+            @guest
+                <!-- Nicht eingeloggt: Login/Registrieren -->
+                <li>
+                    <a href="{{ route('login') }}" title="Anmelden">
+                        <img src="{{ asset('images/profile.svg') }}" alt="Anmelden">
+                    </a>
+                </li>
+            @endguest
+
+            @auth
+                <!-- Eingeloggt: Profil -->
+                <li>
+                    <a href="{{ route('profile') }}" title="Profil">
+                        <img src="{{ asset('images/profile.svg') }}" alt="Profil">
+                    </a>
+                </li>
+
+                <!-- Listing erstellen -->
+                <li>
+                    <a href="{{ route('listings.create') }}" title="Anzeige erstellen">
+                        <img src="{{ asset('images/create_listing.svg') }}" alt="Anzeige erstellen">
+                    </a>
+                </li>
+
+                <!-- Optional: Admin-Link -->
+                @if(method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+                    <li>
+                        <a href="{{ route('admin.dashboard') }}" title="Admin">
+                            <img src="{{ asset('images/admin.svg') }}" alt="Admin">
+                        </a>
+                    </li>
+                @endif
+
+                <!-- Logout -->
                 <li>
                     <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">
                         @csrf
                     </form>
                     <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img
-                            src="{{ asset('images/logout.svg') }}" alt="" width="38"></a>
+                        title="Abmelden"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <img src="{{ asset('images/logout.svg') }}" alt="Abmelden" width="38">
+                    </a>
                 </li>
-            @endif
+            @endauth
         </ul>
     </div>
 </header>

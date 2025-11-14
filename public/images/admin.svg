@@ -1,0 +1,7 @@
+<!-- admin-user-shield-28.svg -->
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="10.5" cy="8.75" r="3.8" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M17.5 24c0-3.99-3.99-7.25-9.1-7.25S-0.7 20.01-0.7 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" transform="translate(1.2,0)"/>
+  <path d="M19.8 9.05l5.6 2.2v5.6c0 3.43-2.22 5.2-5.6 6.51-3.38-1.31-5.6-3.08-5.6-6.51v-5.6l5.6-2.2z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M17.7 15.9l1.7 1.7 3.25-3.25" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

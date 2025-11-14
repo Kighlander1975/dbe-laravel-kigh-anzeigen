@@ -38,6 +38,7 @@ export default defineConfig({
         'resources/css/main.css',
         'resources/css/components/show_listing.css',
         'resources/css/auth.css',
+        'resources/css/profile.css',
         'resources/js/mein_js.js',
         // Tipp: Langfristig eine zentrale resources/css/app.css mit @import nutzen
       ],
