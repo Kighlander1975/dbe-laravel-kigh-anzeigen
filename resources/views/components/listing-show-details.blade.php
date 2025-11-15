@@ -15,58 +15,92 @@
 
 <section class="listing-details">
     <div class="row-1">
-        <div class="current-picture" data-image-count="{{ $thumbCount }}">
+
+        <div class="current-picture" data-images='@json(collect($imagesArray)->map(fn($img) => ['src' => asset('storage/listing_images/' . ($img['image_path'] ?? '')), 'alt' => '']))'
+            data-chevron="{{ asset('images/chevron-right.svg') }}">
             @if ($firstImage)
                 <img src="{{ asset('storage/listing_images/' . $firstImage) }}" alt="" />
             @else
                 <img src="{{ asset('images/placeholder.jpg') }}" alt="Platzhalter" />
             @endif
 
-            <!-- Beispiel: Buttons direkt eingebunden (später wieder per JS generieren) -->
             @if ($thumbCount > 1)
                 <button type="button" class="cp-nav cp-nav-prev" aria-label="Vorheriges Bild">
                     <span class="cp-icon-mask" aria-hidden="true"
                         style="
-          background: currentColor;
-          width:16px;height:16px;display:block;
-          -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
-          mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
-          transform: scaleX(-1);
-        ">
+                    background: currentColor;
+                    width:16px;height:16px;display:block;
+                    -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
+                    mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
+                    transform: scaleX(-1);">
                     </span>
                 </button>
 
                 <button type="button" class="cp-nav cp-nav-next" aria-label="Nächstes Bild">
                     <span class="cp-icon-mask" aria-hidden="true"
                         style="
-          background: currentColor;
-          width:16px;height:16px;display:block;
-          -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
-          mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
-        ">
+                    background: currentColor;
+                    width:16px;height:16px;display:block;
+                    -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
+                    mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;">
                     </span>
                 </button>
             @endif
         </div>
 
+        {{-- Thumbnails --}}
+        @php
+            // nutzt das bereits oben definierte $imagesArray, $thumbCount, $firstImage
+            $initialWindow = array_slice($imagesArray ?? [], 0, 3);
+            // Helper zum Erzeugen des vollqualifizierten Pfads
+            $buildSrc = function ($path) {
+                if (empty($path)) {
+                    return null;
+                }
+                // falls imagesArray bereits relative Pfade (nur Dateinamen) liefert:
+                return asset('storage/listing_images/' . ltrim($path, '/'));
+            };
+        @endphp
 
         <div class="thumb-pictures {{ $thumbCount > 3 ? 'is-scrollable' : '' }}">
-            @if ($thumbCount > 3)
-                <div class="arrow-up" aria-hidden="true"></div>
-            @endif
+            <!-- Viewport mit Thumbs und Scroll-Buttons (Buttons als Overlay) -->
+            <div class="thumb-viewport">
+                @php
+                    $firstThree = array_slice($imagesArray ?? [], 0, 3);
+                    for ($i = count($firstThree); $i < 3; $i++) {
+                        $firstThree[] = ['image_path' => null];
+                    }
+                @endphp
 
-            @forelse($imagesArray as $image)
-                <div class="thumb-picture" data-index="{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}">
-                    <img src="{{ asset('storage/listing_images/' . ($image['image_path'] ?? '')) }}" alt="" />
-                </div>
-            @empty
-                <p class="no-images">Keine Bilder vorhanden.</p>
-            @endforelse
+                @foreach ($firstThree as $idx => $img)
+                    @php
+                        $src = $buildSrc($img['image_path'] ?? null);
+                        // Nummer entspricht dem globalen Index + 1 (initiales Fenster beginnt bei 0)
+                        $number = str_pad((string) ($idx + 1), 2, '0', STR_PAD_LEFT);
+                    @endphp
 
-            @if ($thumbCount > 3)
-                <div class="arrow-down" aria-hidden="true"></div>
-            @endif
+                    <!-- Neutraler Initialzustand: kein is-active/is-disabled/tabindex im Markup -->
+                    <div class="thumb">
+                        @if ($src)
+                            <span class="thumb-badge" aria-hidden="true">{{ $number }}</span>
+                            <img class="thumb-img" src="{{ $src }}" alt="">
+                        @else
+                            <span class="thumb-img thumb-placeholder" aria-hidden="true"></span>
+                        @endif
+                    </div>
+                @endforeach
+
+                <!-- Scroll-Buttons als Overlay -->
+                <button type="button" class="thumb-scroll thumb-scroll-up" aria-label="Thumbnails nach oben scrollen">
+                    <span class="thumb-scroll-ico" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="thumb-scroll thumb-scroll-down"
+                    aria-label="Thumbnails nach unten scrollen">
+                    <span class="thumb-scroll-ico" aria-hidden="true"></span>
+                </button>
+            </div>
         </div>
+
 
         @php
             $seller = $customer ?? ($listing->customer ?? null);

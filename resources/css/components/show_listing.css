@@ -34,66 +34,56 @@
     border-radius: 8px;
 }
 
-/*** Aktuelles Bild: Kachel mit Schatten; Bild liegt absolut zentriert ***/
-/* Erklärung: Das Bild wird absolut positioniert, damit der Container nicht "aufgeblasen" wird. */
+/*** Aktuelles Bild ***/
 .current-picture {
     position: relative;
     min-height: 520px;
-    overflow: hidden;
     margin-right: 32px;
-
     display: grid;
     place-items: center;
-
-    background: #ffffff;
+    background: #fff;
     border: none;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06), 0 12px 28px rgba(0, 0, 0, 0.1);
     padding: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06), 0 12px 28px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* hier okay, weil die Nav-Buttons innen bleiben */
 }
 
-/** Bild innerhalb der padding-box halten (inset = Innenabstand) **/
 .current-picture > img {
     position: absolute;
-    inset: 8px; /* identisch mit padding des Containers */
+    inset: 8px;
     margin: auto;
     max-width: calc(100% - 16px);
     max-height: calc(100% - 16px);
-    width: auto;
-    height: auto;
     object-fit: contain;
     object-position: center;
-    display: block;
-    background: transparent;
-    border-radius: calc(12px - 8px);
+    border-radius: 8px; /* 12px - 8px = 4px; visuell runder passt 8px besser zum großen Radius */
 }
 
-/*** Verkäuferbereich: Info wächst, Buttons unten andocken ***/
+/*** Verkäuferbereich ***/
 .seller-informations {
     display: grid;
-    grid-template-rows: 1fr auto; /* Info wächst, Buttons bleiben unten */
+    grid-template-rows: 1fr auto;
     gap: 2rem;
     align-items: stretch;
     height: 100%;
     min-height: 520px;
 }
 
-/* Visueller Rahmen für Info-Blöcke */
 .seller-information {
     min-height: 260px;
-    border: 3px solid #1cb1b1; /* dein Rahmen behalten */
-    border-radius: 8px; /* dein Radius behalten */
-    background: #fff; /* neu */
-    padding: 16px 18px; /* neu: Innenabstand */
-    color: #1a1a1a; /* neu: Textfarbe */
-    max-width: 360px; /* optional: entfernen, wenn volle Breite gewünscht */
+    border: 3px solid #1cb1b1;
+    border-radius: 8px;
+    background: #fff;
+    padding: 16px 18px;
+    color: #1a1a1a;
+    max-width: 360px;
 
-    display: flex; /* neu */
-    flex-direction: column; /* neu */
-    justify-content: center; /* neu: vertikal zentrieren */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* Zeilen-Layout */
 .seller-information .si-row {
     display: grid;
     grid-template-columns: 22px 1fr;
@@ -104,7 +94,6 @@
     margin-top: 12px;
 }
 
-/* Icon-Platzhalter und Bild */
 .seller-information .si-ico {
     line-height: 1;
     margin-top: 2px;
@@ -112,26 +101,21 @@
     width: 18px;
     height: 18px;
 }
-
 .seller-information .si-ico img {
     width: 18px;
     height: 18px;
-    /* Monochrome SVGs einfärben (optional). Entfernen, wenn Originalfarbe beibehalten werden soll. */
     filter: brightness(0) saturate(100%);
-
 }
 
-/* Typo */
 .seller-information .si-label {
     font-weight: 700;
     margin-bottom: 2px;
-    font-size:1.2em;
+    font-size: 1.2em;
 }
 .seller-information .si-value {
     font-weight: 500;
 }
 
-/* Links */
 .seller-information .si-value a {
     color: #0b807d;
     text-decoration: none;
@@ -140,7 +124,6 @@
     text-decoration: underline;
 }
 
-/* Preis-Hervorhebung */
 .seller-information .si-price .si-value-price {
     font-size: 1.9rem;
     font-weight: 800;
@@ -149,12 +132,11 @@
     margin-top: 2px;
 }
 
-/* Responsive Feinschliff */
 @media (max-width: 600px) {
     .seller-information {
         padding: 14px;
         border-radius: 12px;
-    } /* Radius kann hier runder sein, falls gewünscht */
+    }
     .seller-information .si-row {
         grid-template-columns: 20px 1fr;
         gap: 8px;
@@ -164,42 +146,45 @@
     }
 }
 
-/*** Button-Zeile: zwei gleich breite Spalten ***/
+/*** Button-Zeile ***/
 .seller-action-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     align-self: end;
 }
-
 .seller-action-buttons .favorite,
 .seller-action-buttons .contact {
     min-height: 56px;
     border-radius: 8px;
 }
 
-/*** Button-Utilitys für Seller-Action-Buttons ***/
-/** Flex-Layout + Lücke für Icon-Buttons **/
+/*** Button-Utilities ***/
 .btn-inline {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    line-height: 1;
+    vertical-align: middle;
+    letter-spacing: 0;
 }
-
-/** Mindestbreite und (optionale) Innenabstände über CSS-Custom-Properties **/
-/* Erklärung: --btn-min-w und --btn-pad können pro Button überschrieben werden.
-   Wir setzen hier sinnvolle Default-Werte. */
 .btn-sizing {
     min-width: var(--btn-min-w, 8rem);
     padding: var(--btn-pad, 0.5rem 0.875rem);
 }
-
-/** Masken-Icon neutral (Farbe über currentColor) – z. B. Herz-Icon **/
+.icon-mask,
+.icon-mask-mail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    line-height: 1;
+    vertical-align: middle;
+}
 .icon-mask {
     width: 18px;
     height: 18px;
-    display: inline-block;
     background-color: currentColor;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
@@ -208,13 +193,10 @@
     -webkit-mask-size: contain;
     mask-size: contain;
 }
-
-/** Mail-Icon als Maske (weiß), größer als Herz **/
 .icon-mask-mail {
     width: 20px;
     height: 20px;
-    display: inline-block;
-    background-color: #fff; /* hebt sich auf Primary-Buttons ab */
+    background-color: #fff;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-position: center;
@@ -223,248 +205,22 @@
     mask-size: contain;
 }
 
-/*** Optische Zentrierung von Icon + Text in Buttons ***/
-/* 1) Baseline neutralisieren und echte vertikale Zentrierung erzwingen */
-.btn-inline {
-    line-height: 1; /* verhindert baseline-Drift */
-    vertical-align: middle; /* falls inline innerhalb anderer Kontexte */
-}
-
-/* 2) Text und Icon als zentrierte Inline-Flex-Gruppe behandeln */
-.btn-inline > .js-fav-text,
-.btn-inline > .btn-text {
-    display: inline-flex;
-    align-items: center;
-    line-height: 1;
-}
-
-/* 3) Icons exakt mittig innerhalb ihrer Box ausrichten */
-.icon-mask,
-.icon-mask-mail {
-    display: inline-flex; /* statt inline-block */
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    line-height: 1;
-    vertical-align: middle; /* für Inline-Kontext */
-}
-
-/* 4) Minimaler optischer Ausgleich (manche SVGs sind oben/unten nicht symmetrisch)
-   Wenn die Icons weiterhin leicht “hoch” wirken, 1px nach unten schieben. */
-.icon-mask,
-.icon-mask-mail {
-    transform: translateY(0); /* Default */
-}
-.btn-inline .icon-mask,
-.btn-inline .icon-mask-mail {
-    /* aktiviere bei Bedarf: */
-    /* transform: translateY(1px); */
-}
-
-/* 5) Einheitlicher Gap und keine zusätzliche Wortabstands-Verzerrung */
-.btn-inline {
-    gap: 0.5rem;
-    letter-spacing: 0; /* Sicherheit, falls das Framework hier etwas ändert */
-}
-
-/* 6) Fallback: Wenn das Button-Framework die Höhe via line-height setzt,
-   zwingen wir den Inhalt trotzdem zentriert in der Button-Höhe zu sein */
-.btn-inline.btn-sizing {
-    display: inline-flex; /* sicherstellen, dass Flex aktiv ist */
-    align-items: center; /* vertikal mittig */
-    justify-content: center;
-}
-
-/*** Thumbnails: feste Höhe, 3 quadratische Kacheln mit vertikalem Abstand ***/
-/* Erklärung: calc berücksichtigt Innenabstand + Gaps, damit exakt drei Quadrate passen. */
-.thumb-pictures {
-    display: grid;
-    grid-template-rows: repeat(3, calc((520px - 2 * 16px - 2 * 6px) / 3));
-    row-gap: 6px;
-    height: 520px;
-    width: 100%;
-    padding: 16px 8px; /* Platz für Schatten */
-    overflow: hidden;
-    border-radius: 8px;
-    scrollbar-width: none;
-}
-.thumb-pictures::-webkit-scrollbar {
-    display: none;
-}
-
-/* Platzhalter, wenn keine Bilder vorhanden sind */
-.thumb-pictures .no-images {
-    margin: 0 auto;
-    color: #777;
-    font-size: 14px;
-    padding: 8px 0;
-    text-align: center;
-    border: 1px dashed #ccc;
-}
-
-/*** Einzel-Thumbnail: Kachel mit Hover-Schatten ***/
-.thumb-picture {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    position: relative;
-    box-sizing: border-box;
-    cursor: pointer;
-
-    background: #ffffff center/cover no-repeat;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.08);
-    overflow: hidden; /* wichtig für absolut positionierten Inhalt */
-}
-.thumb-picture:is(:hover, :focus-visible) {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.12);
-    outline: none;
-}
-.thumb-picture.is-active {
-    box-shadow: 0 2px 8px rgba(43, 108, 176, 0.18),
-        0 10px 24px rgba(43, 108, 176, 0.22);
-}
-
-/** Medien im Thumb als echtes "Cover" füllen **/
-.thumb-picture > img,
-.thumb-picture > picture,
-.thumb-picture > video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    z-index: 1;
-}
-
-/* UX: dezente Zoom-Animation beim Hover */
-.thumb-picture > img {
-    -webkit-user-drag: none;
-    user-select: none;
-    transition: transform 160ms ease;
-    max-width: none; /* globale img-Resets neutralisieren */
-}
-.thumb-picture:is(:hover, :focus-visible) > img {
-    transform: scale(1.03);
-}
-
-/*** Nummer-Badge aus data-index unten links ***/
-.thumb-picture::after {
-    content: attr(data-index);
-    position: absolute;
-    left: 6px;
-    bottom: 6px;
-    z-index: 3;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
-
-    font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial,
-        sans-serif;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 10px;
-    pointer-events: none;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
-    backdrop-filter: saturate(120%);
-}
-
-/* Aktives Thumb: höherer Kontrast für Badge */
-.thumb-picture.is-active::after {
-    background: #2b6cb0;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
-}
-
-/*** Scroll-Hinweise für Thumbs (optionale Overlays) ***/
-.arrow-up,
-.arrow-down {
-    position: sticky;
-    left: 0;
-    right: 0;
-    height: 36px;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: auto;
-    cursor: pointer;
-    user-select: none;
-    margin: 0;
-    color: #fff;
-    backdrop-filter: saturate(120%);
-}
-.arrow-up {
-    top: 0;
-    margin-bottom: -36px; /* Overlay ohne Layoutsprung */
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
-}
-.arrow-down {
-    bottom: 0;
-    margin-top: -36px; /* Overlay ohne Layoutsprung */
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
-}
-
-/** Pfeil-Icons als CSS-Dreiecke (Fallback, unabhängig von SVG) **/
-.arrow-up::before,
-.arrow-down::before {
-    content: "";
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-}
-.arrow-up::before {
-    border-bottom: 10px solid #fff;
-}
-.arrow-down::before {
-    border-top: 10px solid #fff;
-}
-
-/* Fokus-Styles für Tastaturbedienung (Thumbnails und Overlays) */
-.thumb-picture:focus-visible,
-.arrow-up:focus-visible,
-.arrow-down:focus-visible {
-    outline: 2px solid #2b6cb0;
-    outline-offset: 2px;
-}
-
-/*** Thumbs scrollbarbar machen, wenn mehr als 3 da sind ***/
-.thumb-pictures.is-scrollable {
-    overflow-y: auto;
-    scrollbar-width: none;
-}
-.thumb-pictures.is-scrollable::-webkit-scrollbar {
-    display: none;
-}
-
 /* =========================
    Mobile
    ========================= */
 @media (max-width: 900px) {
-    /** Reihenfolge mobil: Current -> Thumbs -> Seller **/
+    /* Reihenfolge mobil: Current -> Thumbs -> Seller */
     .listing-details .row-1 {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-areas:
-            "current"
-            "thumbs"
-            "seller";
+        grid-template-areas: "current" "thumbs" "seller";
         gap: 16px;
     }
 
-    /** Current mobil kompakter, gleiche Optik **/
     .current-picture {
         min-height: 320px;
         margin-right: 0;
         overflow: hidden;
-
         background: #ffffff;
         border: none;
         border-radius: 12px;
@@ -473,53 +229,7 @@
         padding: 8px;
     }
 
-    /** Thumbs horizontal scrollen (4 pro View) **/
-    .thumb-pictures {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 8px;
-        padding: 12px 8px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        height: auto;
-        min-height: unset;
-    }
-    .thumb-pictures::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* etwas schmaler, damit Schatten sichtbar bleibt */
-    .thumb-picture {
-        flex: 0 0 auto;
-        width: calc((100% - 3 * 8px) / 4 - 4px);
-        aspect-ratio: 1 / 1;
-        border-radius: 10px;
-        background: #ffffff;
-        border: none;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06),
-            0 4px 12px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-        box-sizing: border-box;
-        padding: 0;
-    }
-
-    .thumb-picture img,
-    .thumb-picture picture,
-    .thumb-picture video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        position: relative;
-        z-index: 1;
-    }
-    .thumb-picture img {
-        max-width: none;
-    }
-
-    /** Seller-Block mobil als 2-Spalten-Layout **/
+    /* Seller mobil als 2-Spalten-Layout */
     .seller-informations {
         display: grid;
         grid-template-columns: 1fr minmax(220px, 32%);
@@ -545,41 +255,26 @@
         min-height: 56px;
     }
 
-    /* Fallback bei sehr schmalen Geräten: Buttons unter der Info */
     @media (max-width: 420px) {
         .seller-informations {
             grid-template-columns: 1fr;
         }
-
-        /* Badge minimal kleiner halten */
-        .thumb-picture::after {
-            min-width: 18px;
-            height: 18px;
-            font-size: 11px;
-            left: 4px;
-            bottom: 4px;
-        }
     }
 }
 
-/* =========================
-   Mobile Portrait – vertikale Abstände straffen
-   ========================= */
+/* Mobile Portrait – vertikale Abstände straffen */
 @media (max-width: 900px) and (orientation: portrait) {
     .seller-informations {
         gap: 12px;
     }
-
     .seller-information {
         margin-bottom: 8px;
         padding-top: 1px;
-        margin-top: -1px; /* optischer Ausgleich bei Rahmen */
+        margin-top: -1px;
     }
-
     .seller-action-buttons > *:first-child {
         margin-top: 8px;
     }
-
     .seller-information > *:not(:last-child) {
         margin-bottom: 6px;
     }
@@ -588,8 +283,6 @@
 /* =========================================
    Overlay-Navigation in .current-picture
    ========================================= */
-
-/*** Gemeinsame Button-Styles (Kreis, zentriert, kontrastreich) ***/
 .current-picture .cp-nav {
     position: absolute;
     top: 50%;
@@ -605,7 +298,7 @@
     justify-content: center;
 
     background: rgba(0, 0, 0, 0.55);
-    color: #fff; /* bestimmt Farbe der Maskenfläche */
+    color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.35);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 
@@ -617,8 +310,6 @@
 
     outline: none;
 }
-
-/** Links/Rechts positionieren **/
 .current-picture .cp-nav-prev {
     left: 12px;
 }
@@ -626,7 +317,6 @@
     right: 12px;
 }
 
-/*** Icon-Span: Größe/Farbe zentral per CSS; Masken-URL kommt inline/JS */
 .current-picture .cp-icon-mask {
     display: block;
     width: 16px;
@@ -634,7 +324,6 @@
     background: currentColor;
 }
 
-/* Hover/Active/Focus States */
 .current-picture .cp-nav:hover,
 .current-picture .cp-nav:focus-visible {
     background: rgba(0, 0, 0, 0.7);
@@ -644,7 +333,6 @@
     transform: translateY(-50%) scale(0.96);
 }
 
-/** Desktop: Buttons dezent, bei Hover voll sichtbar **/
 @media (hover: hover) and (pointer: fine) {
     .current-picture .cp-nav {
         opacity: 0.9;
@@ -653,8 +341,6 @@
         opacity: 1;
     }
 }
-
-/** Kleinere Screens: Buttons kompakter **/
 @media (max-width: 900px) {
     .current-picture .cp-nav {
         width: 32px;
@@ -667,65 +353,308 @@
         right: 8px;
     }
 }
-
-/** Sehr kleine Screens **/
 @media (max-width: 420px) {
     .current-picture .cp-nav {
         width: 28px;
         height: 28px;
     }
 }
-
-/** Tastatur-Fokus klar sichtbar **/
 .current-picture .cp-nav:focus-visible {
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
         0 0 0 4px rgba(43, 108, 176, 0.9), 0 4px 10px rgba(0, 0, 0, 0.22);
 }
 
-/*** ROW 2: Angebotstitel und beschreibung ***/
-.row-2 { padding: 1rem 0; }
-
-/* Titel */
+/*** ROW 2: Angebotstitel und Beschreibung ***/
+.row-2 {
+    padding: 1rem 0;
+}
 .row-2 .listing-title {
-  margin: 0 0 .5rem;
-  font-size: 1.5rem;
-  line-height: 1.25;
-  font-weight: 700;
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1.25;
+    font-weight: 700;
 }
-
-/* Meta-Leiste */
 .row-2 .listing-metas {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column; /* später ggf. entfernen für Reihenlayout */
-  gap: .25rem;
-  margin: 0 0 .75rem;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0 0 0.75rem;
 }
-
 .row-2 .meta-item {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  color: #606770;
-  font-size: .95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #606770;
+    font-size: 0.95rem;
 }
-
 .row-2 .meta-ico {
-  display: inline-flex;
-  width: 16px;
-  height: 16px;
-  align-items: center;
-  justify-content: center;
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
 }
-/* Verhindert minimale Inline-Gaps bei SVG/IMG in Icons */
 .row-2 .meta-ico img {
-  display: block;
+    display: block;
+}
+.row-2 .listing-description {
+    color: #222;
+    line-height: 1.6;
+    white-space: pre-wrap;
 }
 
-/* Beschreibung */
-.row-2 .listing-description {
-  color: #222;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  /* white-space: pre-wrap;  // optional, falls Zeilenumbrüche aus DB erhalten bleiben sollen */
+/*-------------------------------------*/
+
+/*** CSS für Thumbnails (Desktop-only) ***/
+
+/* Container */
+.thumb-pictures {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr; /* eine Zeile, Buttons sind im Viewport */
+    align-items: center;
+    row-gap: 0;
+    min-height: 520px;
+    height: 100%;
+    max-width: 168px;
+    border-radius: 8px;
+    padding: 0;
+    box-sizing: border-box;
+    background: #fff; /* neutraler Hintergrund */
+}
+
+/* Marker für Scrollbarkeit (>=4 Bilder) */
+.thumb-pictures.is-scrollable {
+}
+
+/* Viewport: 3 Thumbs, Buttons als Overlay */
+.thumb-viewport {
+    position: relative; /* Bezug für absolute Buttons */
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    justify-items: center; /* zentriert die 8px schmaleren Bilder */
+    row-gap: 16px;
+    height: 100%;
+    border-radius: 6px;
+    box-sizing: border-box;
+    /* Kein Padding mehr – Buttons liegen als Overlay darüber */
+}
+
+/* Einzelner Thumb */
+.thumb {
+    position: relative; /* Bezugspunkt fürs Badge */
+    width: 100%;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    border-radius: 10px;
+    overflow: visible; /* Badge / Schatten darf rausstehen */
+    z-index: 0;
+}
+
+/* Bild: 8px schmaler als Container, damit Schatten sichtbar bleibt */
+.thumb-img {
+    position: relative;
+    z-index: 1;
+    width: calc(100% - 8px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+}
+
+/* Platzhalter (falls kein Bild vorhanden) */
+.thumb-img.thumb-placeholder {
+    background: repeating-linear-gradient(
+        45deg,
+        #e9edf2,
+        #e9edf2 8px,
+        #dde3ea 8px,
+        #dde3ea 16px
+    );
+}
+
+/* Badge-Overlay links mittig */
+.thumb-badge {
+    position: absolute;
+    z-index: 2;
+    left: 10px; /* etwas mehr Abstand als 8px */
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    min-width: 28px;
+    padding: 0 8px;
+    border-radius: 999px;
+
+    background: rgba(56, 132, 255, 0.18);
+    color: #0b3d91;
+    border: 1px solid rgba(56, 132, 255, 0.35);
+
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+
+    backdrop-filter: saturate(120%) blur(2px);
+    pointer-events: none;
+}
+
+/* Aktiver Thumb: Rahmen + leichte Skalierung */
+.thumb.is-active .thumb-img {
+    outline: 2px solid #2b6cb0;
+    outline-offset: 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+    transform: translateZ(0) scale(1.01);
+    transition: transform 140ms ease, box-shadow 140ms ease,
+        outline-color 140ms ease;
+}
+
+/* Badge im aktiven Zustand stärker betonen */
+.thumb.is-active .thumb-badge {
+    background: #2b6cb0;
+    color: #fff;
+    border-color: #2b6cb0;
+}
+
+/* Subtiler Hover nur für nicht-aktive Thumbs */
+@media (hover: hover) and (pointer: fine) {
+    .thumb:not(.is-active) .thumb-img:hover {
+        /*box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+        transform: translateZ(0) scale(1.01);*/
+    }
+}
+
+/* Scroll-Buttons als Overlay */
+.thumb-scroll {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    width: auto;
+    min-height: 40px;
+    appearance: none;
+
+    /* Sehr transparent im Idle-Zustand */
+    background: rgba(255, 255, 255, 0.3); /* Fläche kaum sichtbar */
+    border: 1px solid rgba(0, 0, 0, 0.14); /* dezente Kontur */
+    color: #0a0a0a; /* Einfluss auf Icon-Farbe via currentColor */
+    /* Icon deutlich sichtbar trotz transparenter Fläche */
+    /* Wir erhöhen die Icon-Sichtbarkeit zusätzlich weiter unten */
+
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default; /* später pointer */
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); /* sehr subtil */
+    transition: background-color 140ms ease, box-shadow 140ms ease,
+        transform 120ms ease, opacity 120ms ease, color 140ms ease,
+        border-color 140ms ease;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, background-color, box-shadow;
+}
+
+/* Aktiv wenn scrollbar */
+.thumb-pictures.is-scrollable .thumb-scroll {
+    pointer-events: auto;
+    opacity: 1;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+/* OBERER Button: unten eckig */
+.thumb-scroll-up {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 8px);
+    right: auto;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* UNTERER Button: oben eckig */
+.thumb-scroll-down {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 8px);
+    right: auto;
+
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Hover/Focus: VOLLFLÄCHIG und klarer Rahmen */
+.thumb-scroll:hover,
+.thumb-scroll:focus-visible {
+    background: #f5f7fb; /* vollfarbig hell */
+    border-color: rgba(0, 0, 0, 0.18);
+    color: #111; /* Icon-kontrast */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    outline: 2px solid #2b6cb0;
+    outline-offset: -2px; /* sitzt direkt an der Kante */
+}
+
+/* Active: kleiner Druckeffekt */
+.thumb-scroll-up:active,
+.thumb-scroll-down:active {
+    transform: translateX(-50%) scale(0.98);
+}
+
+/* Icon via CSS-Mask – Pfeil sehr sichtbar */
+.thumb-scroll-ico {
+    width: 18px;
+    height: 18px;
+
+    /* Pfeil kontrastreich: wir nutzen currentColor, machen diese im Idle dunkler */
+    background-color: currentColor;
+
+    -webkit-mask: var(--thumb-arrow) no-repeat center / contain;
+    mask: var(--thumb-arrow) no-repeat center / contain;
+
+    /* Extra Boost für Sichtbarkeit im Idle: leichter Schein hinter dem Icon */
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
+}
+
+/* Icon-Grafiken */
+.thumb-scroll-up .thumb-scroll-ico {
+    --thumb-arrow: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="%23000" viewBox="0 0 24 24"><path d="M6.7 14.7a1 1 0 0 1 0-1.4l4.6-4.6a1 1 0 0 1 1.4 0l4.6 4.6a1 1 0 0 1-1.4 1.4L12 10.41l-4.3 4.3a1 1 0 0 1-1.4 0z"/></svg>');
+}
+.thumb-scroll-down .thumb-scroll-ico {
+    --thumb-arrow: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="%23000" viewBox="0 0 24 24"><path d="M17.3 9.3a1 1 0 0 1 0 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 1.4-1.4L12 13.59l3.9-3.9a1 1 0 0 1 1.4 0z"/></svg>');
+}
+
+/* Optional: Dark-Mode Tuning */
+@media (prefers-color-scheme: dark) {
+    .thumb-scroll {
+        background: rgba(28, 28, 28, 0.18); /* minimal sichtbar */
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #fafafa; /* Icon hell für Kontrast */
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    .thumb-scroll:hover,
+    .thumb-scroll:focus-visible {
+        background: rgba(
+            255,
+            255,
+            255,
+            0.12
+        ); /* vollfarbig relativ zu Dark-UI */
+        border-color: rgba(255, 255, 255, 0.22);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
 }
