@@ -17,30 +17,30 @@ export default defineConfig({
         `http://${localAppHost}`,
         `http://${hmrHost}`,
       ],
-      methods: ['GET', 'POST', 'PUT,', 'DELETE', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
       credentials: true,
     },
     hmr: {
       host: hmrHost, // Hostname, den Clients im LAN erreichen
       port: 5173,
-      protocol: 'ws', // für Vite-HMR ist ws üblich; http funktioniert teils, ws ist robuster
+      protocol: 'ws',
     },
   },
   plugins: [
     laravel({
-      // Stelle sicher, dass @vite([...]) diese Inputs nutzt
       input: [
+        // CSS – kannst du später über eine zentrale app.css konsolidieren
         'resources/css/header.css',
         'resources/css/footer.css',
         'resources/css/components/listings.css',
         'resources/css/components/flashmessages.css',
-        'resources/css/main.css',
         'resources/css/components/show_listing.css',
         'resources/css/auth.css',
         'resources/css/profile.css',
-        'resources/js/mein_js.js',
-        // Tipp: Langfristig eine zentrale resources/css/app.css mit @import nutzen
+        'resources/css/main.css',
+        // EINZIGER JS-Entry:
+        'resources/js/app.js',
       ],
       refresh: true,
     }),

@@ -62,7 +62,7 @@
             };
         @endphp
 
-        <div class="thumb-pictures {{ $thumbCount > 3 ? 'is-scrollable' : '' }}">
+        <div class="thumb-pictures {{ $thumbCount > 3 ? 'is-scrollable' : '' }}" data-total="{{ $thumbCount }}" data-window-size="3">
             <!-- Viewport mit Thumbs und Scroll-Buttons (Buttons als Overlay) -->
             <div class="thumb-viewport">
                 @php
@@ -91,10 +91,17 @@
                 @endforeach
 
                 <!-- Scroll-Buttons als Overlay -->
-                <button type="button" class="thumb-scroll thumb-scroll-up" aria-label="Thumbnails nach oben scrollen">
+                <button
+                    type="button"
+                    class="thumb-scroll thumb-scroll-up"
+                    data-action="thumbs-scroll-up"
+                    aria-label="Thumbnails nach oben scrollen">
                     <span class="thumb-scroll-ico" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="thumb-scroll thumb-scroll-down"
+                <button
+                    type="button"
+                    class="thumb-scroll thumb-scroll-down"
+                    data-action="thumbs-scroll-down"
                     aria-label="Thumbnails nach unten scrollen">
                     <span class="thumb-scroll-ico" aria-hidden="true"></span>
                 </button>

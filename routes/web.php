@@ -4,6 +4,7 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PerfLogController;
 
 Route::get('/', [ListingController::class, 'index'])->name('home');
 
@@ -36,4 +37,9 @@ Route::get('/listings/{listing}', [ListingController::class, 'show'])
     ->whereNumber('listing') // verhindert Match auf "create"
     ->name('listings.show');
 
-require __DIR__.'/auth.php';
+// Performance-Logging-Endpoint (CSRF in Middleware ausgenommen)
+Route::post('/perf/log', [PerfLogController::class, 'store'])
+    ->middleware('throttle:120,1')
+    ->name('perf.log');
+
+require __DIR__ . '/auth.php';
