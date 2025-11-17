@@ -11,6 +11,41 @@
 @php
     $thumbCount = is_countable($imagesArray ?? []) ? count($imagesArray) : 0;
     $firstImage = !empty($imagesArray) && isset($imagesArray[0]['image_path']) ? $imagesArray[0]['image_path'] : null;
+
+    // Verkäufer ermitteln
+    $seller = $customer ?? ($listing->customer ?? null);
+
+    // Preis
+    $rawPrice = $listing->preis ?? null;
+    $hasPrice = is_numeric($rawPrice);
+    $priceFormatted = $hasPrice ? number_format((float) $rawPrice, 2, ',', '.') . '€' : null;
+
+    // Adresse
+    $street = trim(($seller->strasse ?? '') . ' ' . ($seller->hausnummer ?? ''));
+    $city = trim(($seller->plz ?? '') . ' ' . ($seller->ort ?? ''));
+
+    // Name-Kürzung für Gäste
+    $sellerName = $seller->name ?? '';
+    $nameFirst = '';
+    $nameLastInitial = '';
+    if (!empty($sellerName)) {
+        // Versuche, an Leerzeichen zu splitten: Vorname + Nachname
+        $parts = preg_split('/\s+/', trim($sellerName));
+        if ($parts && count($parts) > 0) {
+            $nameFirst = $parts[0];
+            // Nachname aus den restlichen Teilen, erster Buchstabe
+            $last = count($parts) > 1 ? end($parts) : '';
+            $nameLastInitial = !empty($last) ? mb_substr($last, 0, 1) . '.' : '';
+        }
+    }
+
+    // Helper zum Erzeugen des Bildpfads
+    $buildSrc = function ($path) {
+        if (empty($path)) {
+            return null;
+        }
+        return asset('storage/listing_images/' . ltrim($path, '/'));
+    };
 @endphp
 
 <section class="listing-details">
@@ -28,58 +63,45 @@
                 <button type="button" class="cp-nav cp-nav-prev" aria-label="Vorheriges Bild">
                     <span class="cp-icon-mask" aria-hidden="true"
                         style="
-                    background: currentColor;
-                    width:16px;height:16px;display:block;
-                    -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
-                    mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
-                    transform: scaleX(-1);">
+                            background: currentColor;
+                            width:16px;height:16px;display:block;
+                            -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
+                            mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
+                            transform: scaleX(-1);
+                        ">
                     </span>
                 </button>
 
                 <button type="button" class="cp-nav cp-nav-next" aria-label="Nächstes Bild">
                     <span class="cp-icon-mask" aria-hidden="true"
                         style="
-                    background: currentColor;
-                    width:16px;height:16px;display:block;
-                    -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
-                    mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;">
+                            background: currentColor;
+                            width:16px;height:16px;display:block;
+                            -webkit-mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
+                            mask: url('{{ asset('images/chevron-right.svg') }}') center/16px 16px no-repeat;
+                        ">
                     </span>
                 </button>
             @endif
         </div>
 
-        {{-- Thumbnails --}}
         @php
-            // nutzt das bereits oben definierte $imagesArray, $thumbCount, $firstImage
             $initialWindow = array_slice($imagesArray ?? [], 0, 3);
-            // Helper zum Erzeugen des vollqualifizierten Pfads
-            $buildSrc = function ($path) {
-                if (empty($path)) {
-                    return null;
-                }
-                // falls imagesArray bereits relative Pfade (nur Dateinamen) liefert:
-                return asset('storage/listing_images/' . ltrim($path, '/'));
-            };
+            $firstThree = array_slice($imagesArray ?? [], 0, 3);
+            for ($i = count($firstThree); $i < 3; $i++) {
+                $firstThree[] = ['image_path' => null];
+            }
         @endphp
 
-        <div class="thumb-pictures {{ $thumbCount > 3 ? 'is-scrollable' : '' }}" data-total="{{ $thumbCount }}" data-window-size="3">
-            <!-- Viewport mit Thumbs und Scroll-Buttons (Buttons als Overlay) -->
+        <div class="thumb-pictures {{ $thumbCount > 3 ? 'is-scrollable' : '' }}" data-total="{{ $thumbCount }}"
+            data-window-size="3">
             <div class="thumb-viewport">
-                @php
-                    $firstThree = array_slice($imagesArray ?? [], 0, 3);
-                    for ($i = count($firstThree); $i < 3; $i++) {
-                        $firstThree[] = ['image_path' => null];
-                    }
-                @endphp
-
                 @foreach ($firstThree as $idx => $img)
                     @php
                         $src = $buildSrc($img['image_path'] ?? null);
-                        // Nummer entspricht dem globalen Index + 1 (initiales Fenster beginnt bei 0)
                         $number = str_pad((string) ($idx + 1), 2, '0', STR_PAD_LEFT);
                     @endphp
 
-                    <!-- Neutraler Initialzustand: kein is-active/is-disabled/tabindex im Markup -->
                     <div class="thumb">
                         @if ($src)
                             <span class="thumb-badge" aria-hidden="true">{{ $number }}</span>
@@ -90,37 +112,16 @@
                     </div>
                 @endforeach
 
-                <!-- Scroll-Buttons als Overlay -->
-                <button
-                    type="button"
-                    class="thumb-scroll thumb-scroll-up"
-                    data-action="thumbs-scroll-up"
+                <button type="button" class="thumb-scroll thumb-scroll-up" data-action="thumbs-scroll-up"
                     aria-label="Thumbnails nach oben scrollen">
                     <span class="thumb-scroll-ico" aria-hidden="true"></span>
                 </button>
-                <button
-                    type="button"
-                    class="thumb-scroll thumb-scroll-down"
-                    data-action="thumbs-scroll-down"
+                <button type="button" class="thumb-scroll thumb-scroll-down" data-action="thumbs-scroll-down"
                     aria-label="Thumbnails nach unten scrollen">
                     <span class="thumb-scroll-ico" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
-
-
-        @php
-            $seller = $customer ?? ($listing->customer ?? null);
-
-            // Preis formatieren (nur wenn numerisch)
-            $rawPrice = $listing->preis ?? null;
-            $hasPrice = is_numeric($rawPrice);
-            $priceFormatted = $hasPrice ? number_format((float) $rawPrice, 2, ',', '.') . '€' : null;
-
-            // Adresse
-            $street = trim(($seller->strasse ?? '') . ' ' . ($seller->hausnummer ?? ''));
-            $city = trim(($seller->plz ?? '') . ' ' . ($seller->ort ?? ''));
-        @endphp
 
         @if ($seller)
             <div class="seller-informations">
@@ -134,20 +135,35 @@
                             </span>
                             <div class="si-content">
                                 <div class="si-label">Angeboten von:</div>
-                                <div class="si-value">{{ $seller->name }}</div>
+
+                                @auth
+                                    <div class="si-value">{{ $seller->name }}</div>
+                                @endauth
+
+                                @guest
+                                    <div class="si-value">
+                                        {{-- Gäste: Vorname + Nachname initial --}}
+                                        {{ $nameFirst }}
+                                        @if ($nameLastInitial)
+                                            {{ ' ' . $nameLastInitial }}
+                                        @endif
+                                        
+                                    </div>
+                                @endguest
                             </div>
                         </div>
                     @endif
 
                     {{-- Adresse --}}
-                    @if ($street || $city)
-                        <div class="si-row">
-                            <span class="si-ico" aria-hidden="true">
-                                <img src="{{ asset('images/location.svg') }}" alt="" width="18"
-                                    height="18" loading="lazy">
-                            </span>
-                            <div class="si-content">
-                                <div class="si-label">Adresse:</div>
+                    <div class="si-row">
+                        <span class="si-ico" aria-hidden="true">
+                            <img src="{{ asset('images/location.svg') }}" alt="" width="18" height="18"
+                                loading="lazy">
+                        </span>
+                        <div class="si-content">
+                            <div class="si-label">Adresse:</div>
+
+                            @auth
                                 <div class="si-value">
                                     @if ($street)
                                         <div>{{ $street }}</div>
@@ -156,26 +172,66 @@
                                         <div>{{ $city }}</div>
                                     @endif
                                 </div>
-                            </div>
+                            @endauth
+
+                            @guest
+                                {{-- Gäste: Platzhalter + Hinweis --}}
+                                <div class="si-value" aria-live="polite">
+                                    <div style="display:flex;gap:.35rem;flex-direction:column;max-width:18rem;">
+                                        <span
+                                            style="display:block;height:12px;border-radius:6px;background:linear-gradient(90deg,#e5e7eb,#f3f4f6,#e5e7eb);background-size:200% 100%;animation:plcshimmer 1.2s ease-in-out infinite;"></span>
+                                        <span
+                                            style="display:block;height:12px;width:70%;border-radius:6px;background:linear-gradient(90deg,#e5e7eb,#f3f4f6,#e5e7eb);background-size:200% 100%;animation:plcshimmer 1.2s ease-in-out infinite;"></span>
+                                        <span
+                                            style="display:inline-block;margin-top:.25rem;padding:.2rem .45rem;font-size:.75rem;line-height:1;border-radius:.35rem;background:#f4f4f5;color:#6b7280;">
+                                            Melde dich an, um die genaue Adresse zu sehen
+                                        </span>
+                                    </div>
+                                </div>
+                                {{-- Keyframes inline einmalig definieren --}}
+                                <style>
+                                    @keyframes plcshimmer {
+                                        0% {
+                                            background-position: 200% 0;
+                                        }
+
+                                        100% {
+                                            background-position: -200% 0;
+                                        }
+                                    }
+                                </style>
+                            @endguest
                         </div>
-                    @endif
+                    </div>
 
                     {{-- E-Mail (und optional Telefon) --}}
                     @if (!empty($seller->email) || !empty($seller->telefonnummer))
                         <div class="si-row">
-                            <span class="si-ico" aria-hidden="true">
-                                {{-- Kein Icon für Kontakt nötig; falls gewünscht, eigenes mail.svg ablegen --}}
-                            </span>
+                            <span class="si-ico" aria-hidden="true"></span>
                             <div class="si-content">
-                                @if (!empty($seller->email))
-                                    <div class="si-value"><a
-                                            href="mailto:{{ $seller->email }}">{{ $seller->email }}</a></div>
-                                @endif
-                                @if (!empty($seller->telefonnummer))
-                                    <div class="si-value"><a
-                                            href="tel:{{ preg_replace('/\s+/', '', $seller->telefonnummer) }}">{{ $seller->telefonnummer }}</a>
+                                @auth
+                                    @if (!empty($seller->email))
+                                        <div class="si-value"><a
+                                                href="mailto:{{ $seller->email }}">{{ $seller->email }}</a></div>
+                                    @endif
+                                    @if (!empty($seller->telefonnummer))
+                                        <div class="si-value"><a
+                                                href="tel:{{ preg_replace('/\s+/', '', $seller->telefonnummer) }}">{{ $seller->telefonnummer }}</a>
+                                        </div>
+                                    @endif
+                                @endauth
+
+                                @guest
+                                    {{-- Gäste: verdeckt mit Platzhalter und Hinweis --}}
+                                    <div class="si-value">
+                                        <span
+                                            style="display:inline-block;min-width:10rem;height:12px;border-radius:6px;background:linear-gradient(90deg,#e5e7eb,#f3f4f6,#e5e7eb);background-size:200% 100%;animation:plcshimmer 1.2s ease-in-out infinite;"></span>
+                                        <span
+                                            style="display:inline-block;margin-left:.5rem;padding:.2rem .45rem;font-size:.75rem;line-height:1;border-radius:.35rem;background:#f4f4f5;color:#6b7280;">
+                                            Login erforderlich
+                                        </span>
                                     </div>
-                                @endif
+                                @endguest
                             </div>
                         </div>
                     @endif
@@ -196,27 +252,46 @@
                 </div>
 
                 <div class="seller-action-buttons">
+                    {{-- Favorit: bleibt sichtbar (noch nicht scharf) --}}
                     <button type="button" class="btn btn-outline-danger js-fav-toggle btn-inline btn-sizing"
                         aria-label="Zu Favoriten hinzufügen" aria-pressed="false"
                         data-heart-url="{{ asset('images/heart.svg') }}"
                         data-heart-broken-url="{{ asset('images/heart-broken.svg') }}" style="--btn-min-w: 8rem;">
                         <span class="js-fav-icon icon-mask" aria-hidden="true"
                             style="
-                -webkit-mask-image: url('{{ asset('images/heart.svg') }}');
-                mask-image: url('{{ asset('images/heart.svg') }}');
-            "></span>
+                                -webkit-mask-image: url('{{ asset('images/heart.svg') }}');
+                                mask-image: url('{{ asset('images/heart.svg') }}');
+                            "></span>
                         <span class="js-fav-text">Favorit</span>
                     </button>
 
-                    <button type="button" class="btn btn-primary btn-inline btn-sizing"
-                        aria-label="Verkäufer kontaktieren" style="--btn-min-w: 8rem; --btn-pad: .4rem .75rem;">
-                        <span class="icon-mask-mail" aria-hidden="true"
-                            style="
-                -webkit-mask-image: url('{{ asset('images/mail-send.svg') }}');
-                mask-image: url('{{ asset('images/mail-send.svg') }}');
-            "></span>
-                        <span class="btn-text">Kontakt</span>
-                    </button>
+                    {{-- Kontakt: für Gäste -> Login; für Auth -> Platzhalter-Action (später Ziel ergänzen) --}}
+                    @guest
+                        <a href="{{ route('login') }}" class="btn btn-primary btn-inline btn-sizing"
+                            aria-label="Zum Login, um den Verkäufer zu kontaktieren"
+                            style="--btn-min-w: 8rem; --btn-pad: .4rem .75rem; text-decoration:none; display:inline-flex; align-items:center; gap:.5rem;">
+                            <span class="icon-mask-mail" aria-hidden="true"
+                                style="
+                                    width:1em;height:1em;display:inline-block;
+                                    -webkit-mask-image: url('{{ asset('images/mail-send.svg') }}');
+                                    mask-image: url('{{ asset('images/mail-send.svg') }}');
+                                    background: currentColor;
+                                "></span>
+                            <span class="btn-text">Kontakt</span>
+                        </a>
+                    @endguest
+
+                    @auth
+                        <button type="button" class="btn btn-primary btn-inline btn-sizing"
+                            aria-label="Verkäufer kontaktieren" style="--btn-min-w: 8rem; --btn-pad: .4rem .75rem;">
+                            <span class="icon-mask-mail" aria-hidden="true"
+                                style="
+                                    -webkit-mask-image: url('{{ asset('images/mail-send.svg') }}');
+                                    mask-image: url('{{ asset('images/mail-send.svg') }}');
+                                "></span>
+                            <span class="btn-text">Kontakt</span>
+                        </button>
+                    @endauth
                 </div>
             </div>
         @endif
@@ -253,7 +328,6 @@
             </div>
         </div>
 
-        <div class="listing-description">{{ $listing->beschreibung }}</div> {{-- Einzeilig, damit keine Whitespaces am Anfang sind --}}
+        <div class="listing-description">{{ $listing->beschreibung }}</div>
     </div>
-
 </section>
