@@ -5,7 +5,6 @@
 @section('content')
 
     <h1>Alle Listings</h1>
-    <a class="btn btn-primary" href="{{ route('listings.create') }}">Neues Listing erstellen</a>
 
     @if (isset($listings) && $listings->isNotEmpty())
         <div class="listings-container">

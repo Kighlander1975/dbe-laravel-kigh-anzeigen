@@ -1,4 +1,4 @@
-@if (session('success') || session('error') || $errors->any())
+@if (session('success') || session('error') || session('info') || $errors->any())
     <div class="flash-message-container">
         @if (session('success'))
             <div class="flash-message success">

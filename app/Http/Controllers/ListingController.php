@@ -32,7 +32,7 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-   
+
         // Validierung der Formulardaten
         $validatedData = $request->validate([
             'name' => 'required',
@@ -40,13 +40,13 @@ class ListingController extends Controller
             'preis' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
         ]);
-   
+
         // Customer ID hinzufügen
         $validatedData['customer_id'] = auth()->id();
-   
+
         // Neues Listing in der Datenbank speichern
         Listing::create($validatedData);
-   
+
         // Benutzer zur Übersichtsseite weiterleiten
         return redirect()->route('home')->with('success', 'Artikel erfolgreich erstellt!');
     }
@@ -73,8 +73,9 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
+        $listing->load('images');
         $categories = Category::all();
-        return view('listings.edit', compact(['listing','categories']));
+        return view('listings.edit', compact(['listing', 'categories']));
     }
 
     /**
@@ -82,17 +83,27 @@ class ListingController extends Controller
      */
     public function update(Request $request, Listing $listing)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'beschreibung' => 'required',
             'preis' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        $listing->update($request->only(['name', 'beschreibung', 'preis', 'category_id']));
+        // Temporär füllen, um Änderungen zu erkennen
+        $listing->fill($validated);
 
-        return redirect('/listings/' .  $listing->id)->with('success', 'Artikel erfolgreich aktualisiert!');
+        if (! $listing->isDirty(['name', 'beschreibung', 'preis', 'category_id'])) {
+            // Keine Änderungen
+            return redirect('profile')->with('info', 'Keine Änderungen erkannt.');
+        }
+
+        // Es gibt Änderungen -> speichern
+        $listing->save();
+
+        return redirect('profile')->with('success', 'Artikel erfolgreich aktualisiert!');
     }
+
 
     /**
      * Remove the specified resource from storage.
