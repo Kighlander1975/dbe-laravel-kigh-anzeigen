@@ -76,10 +76,10 @@
 
 
         <!-- Filter-Button -->
-        <div style="width: 50%; margin: 0 auto;">
-            <button class="btn btn-danger" style="--btn-min-w: 12rem; --btn-pad: .75rem .5rem"
+        <div style="width: 60%; margin: 0 auto;">
+            <button class="btn btn-danger" style="--btn-min-w: 7rem; --btn-pad: .75rem .5rem"
                 type="submit">Filtern</button>
-            <a class="btn btn-outline-secondary" style="--btn-min-w: 12rem;text-align:center"
+            <a class="btn btn-outline-secondary" style="--btn-min-w: 7rem;text-align:center"
                 href="{{ route('home') }}">Filter löschen</a>
         </div>
 

@@ -14,6 +14,8 @@
                     </div>
                 @endforeach
             </div>
+        @elseif($listings->isEmpty())
+            <p>Keine Anzeigen gefunden.</p>
         @else
             <p>Aktuell gibt es keine neuen Anzeigen.</p>
         @endif

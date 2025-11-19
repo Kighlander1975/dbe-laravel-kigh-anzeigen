@@ -22,6 +22,21 @@ class ListingController extends Controller
     {
         $query = Listing::query();
 
+        /* Suche */
+        // Suche nach Name/Beschreibung
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('listings.name', 'LIKE', $searchTerm)
+                    ->orWhere('listings.beschreibung', 'LIKE', $searchTerm);
+            });
+        }
+
+        // Suche nach Ort
+        if ($request->filled('search_location')) {
+            $query->where('customers.ort', 'LIKE', '%' . $request->search_location . '%');
+        }
+
         // Join mit Customers-Tabelle, um nach Standort zu filtern
         $query->join('customers', 'listings.customer_id', '=', 'customers.id');
 

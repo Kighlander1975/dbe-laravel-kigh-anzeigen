@@ -7,10 +7,10 @@
     </div>
 
     <div class="suche">
-        <form class="suche-eingaben" action="{{ route('home') }}" method="GET">
-            <input type="text" name="what" id="what" placeholder="Was suchst Du?" value="{{ request('what') }}" />
+        <form class="suche-eingaben" action="{{ route('home') }}" method="GET" id="search">
+            <input type="text" name="search" id="what" placeholder="Was suchst Du?" value="{{ request('search') }}" />
             <span class="trenner">|</span>
-            <input type="text" name="where" id="where" placeholder="PLZ oder Ort" value="{{ request('where') }}" />
+            <input type="text" name="search_location" id="where" placeholder="PLZ oder Ort" value="{{ request('search_location') }}" />
             <input type="submit" value="Suchen" />
         </form>
     </div>

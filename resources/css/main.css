@@ -491,8 +491,11 @@ a.btn {
 
 .home-listings {
     display: flex;
-    width: 85%;
+    width: 100%;
     gap: 3rem;
+}
+.home-listings .filter-sidebar {
+    width: 20%;
 }
 .home-listings form {
     display: flex;
@@ -509,7 +512,7 @@ a.btn {
     margin-bottom: 1.5rem;
 }
 
-.category-label {
+.home-listings .category-label {
     display: flex;
     align-items: baseline;
     width: 100%;
@@ -518,71 +521,72 @@ a.btn {
     overflow: hidden; /* Verhindert, dass die Punkte über den Container hinausgehen */
 }
 
-.category-left {
+.home-listings .category-left {
     display: flex;
     align-items: center;
     gap: 5px; /* Abstand zwischen Radio-Button und Text */
     white-space: nowrap; /* Verhindert Umbruch des Namens */
 }
 
-.category-name {
+.home-listings .category-name {
     margin-right: 5px; /* Abstand zwischen Name und Punkten */
 }
 
-.category-dots {
+.home-listings .category-dots {
     flex-grow: 1;
     border-bottom: 1px dotted #999; /* Gepunktete Linie */
     margin: 0 5px; /* Abstand zu beiden Seiten */
 }
 
-.category-count {
+.home-listings .category-count {
     white-space: nowrap; /* Verhindert Umbruch der Anzahl */
     color: #acacac;
 }
 /* Preisfilter Styling */
-.price-filter {
+.home-listings .price-filter {
     margin-bottom: 15px;
 }
 
-.price-options {
+.home-listings .price-options {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-bottom: 15px;
 }
 
-.price-label {
+.home-listings .price-label {
     display: flex;
     align-items: center;
     cursor: pointer;
 }
 
-.price-label input[type="radio"] {
+.home-listings .price-label input[type="radio"] {
     margin-right: 8px;
 }
 
-.price-range-inputs {
+.home-listings .price-range-inputs {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.price-input {
+.home-listings .price-input {
     flex: 1;
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #d9edf7; /* Hellblau wie im Bild */
     outline: none;
+    width: 20%;
 }
 
-.price-separator {
+.home-listings .price-separator {
     font-size: 14px;
     color: #333;
 }
 
 /* Allgemeine Styling-Verbesserungen */
-h3 {
+.home-listings h3 {
     margin-top: 20px;
     margin-bottom: 15px;
     font-weight: 600;
