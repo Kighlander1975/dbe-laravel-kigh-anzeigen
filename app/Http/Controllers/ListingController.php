@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\Listing;
 use Illuminate\Support\Facades\DB;
@@ -16,11 +17,92 @@ class ListingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // Controller-Methode anpassen
+    public function index(Request $request)
     {
-        $listings = Listing::with('images')->latest()->get();
-        return view('listings.index', compact('listings'));
+        $query = Listing::query();
+
+        // Join mit Customers-Tabelle, um nach Standort zu filtern
+        $query->join('customers', 'listings.customer_id', '=', 'customers.id');
+
+        // Filter nach Kategorie
+        if ($request->filled('category')) {
+            $query->where('category_id', (int) $request->category);
+        }
+
+        // Filter nach Standort (jetzt mit PLZ-Ort Format)
+        if ($request->filled('location')) {
+            // Hier nehmen wir an, dass 'location' jetzt im Format "PLZ Ort" ist
+            $locationParts = explode(' ', $request->location, 2);
+            if (count($locationParts) == 2) {
+                $query->where('customers.plz', $locationParts[0])
+                    ->where('customers.ort', $locationParts[1]);
+            } else {
+                // Fallback, falls nur ein Teil übergeben wird
+                $query->where('customers.ort', $request->location);
+            }
+        }
+
+        // Filter nach Preisbereich
+        if ($request->filled('min_price') && is_numeric($request->min_price)) {
+            $query->where('preis', '>=', (float) $request->min_price);
+        }
+        if ($request->filled('max_price') && is_numeric($request->max_price)) {
+            $query->where('preis', '<=', (float) $request->max_price);
+        }
+
+        // Preisbereich-Filter
+        if ($request->filled('price_range')) {
+            // String "20-50" in zwei Werte zerlegen
+            $prices = explode('-', $request->price_range);
+
+            if (count($prices) == 2) {
+                $minPrice = (float) $prices[0];
+                $maxPrice = (float) $prices[1];
+
+                $query->whereBetween('preis', [$minPrice, $maxPrice]);
+            }
+        }
+
+        // Holen der Orte mit PLZ und effiziente Zählung der Listings pro Ort
+        $locations = Customer::select(DB::raw("CONCAT(plz, ' ', ort) as location"), 'plz', 'ort')
+            ->distinct()
+            ->get()
+            ->pluck('location');
+
+        // Effiziente Methode zur Zählung der Listings pro Ort
+        $locationCountsQuery = Listing::join('customers', 'listings.customer_id', '=', 'customers.id')
+            ->select(DB::raw("CONCAT(customers.plz, ' ', customers.ort) as location"), DB::raw('count(*) as count'))
+            ->groupBy('customers.plz', 'customers.ort');
+
+        // Anwenden der Filter auf die Zählung, wenn vorhanden
+        if ($request->filled('category')) {
+            $locationCountsQuery->where('category_id', (int) $request->category);
+        }
+
+        if ($request->filled('min_price') && is_numeric($request->min_price)) {
+            $locationCountsQuery->where('preis', '>=', (float) $request->min_price);
+        }
+
+        if ($request->filled('max_price') && is_numeric($request->max_price)) {
+            $locationCountsQuery->where('preis', '<=', (float) $request->max_price);
+        }
+
+        if ($request->filled('price_range')) {
+            $prices = explode('-', $request->price_range);
+            if (count($prices) == 2) {
+                $locationCountsQuery->whereBetween('preis', [(float) $prices[0], (float) $prices[1]]);
+            }
+        }
+
+        $locationCounts = $locationCountsQuery->pluck('count', 'location')->toArray();
+
+        $listings = $query->orderBy('listings.created_at', 'desc')->select('listings.*')->get();
+        $categories = Category::all();
+
+        return view('listings.index', compact('listings', 'categories', 'locations', 'locationCounts'));
     }
+
 
     /**
      * Show the form for creating a new resource.

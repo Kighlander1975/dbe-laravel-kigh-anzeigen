@@ -9,7 +9,7 @@
         <div class="listing-card-body">
             <div class="listing-ort">
                 <img src="{{ asset('images/location.svg') }}" alt="Artikelstandort" />
-                <p>irgendwo</p>
+                <p>{{ $listing->customer->ort }}</p>
             </div>
             <div class="listing-price">
                 {{ number_format($listing->preis, 2) }}€
