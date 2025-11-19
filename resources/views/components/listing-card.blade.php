@@ -7,6 +7,9 @@
             <h2>{{ $listing->name }}</h2>
         </header>
         <div class="listing-card-body">
+            <div class="listing-count-fav">
+                <x-favorites-count :listing="$listing" />
+            </div>
             <div class="listing-ort">
                 <img src="{{ asset('images/location.svg') }}" alt="Artikelstandort" />
                 <p>{{ $listing->customer->ort }}</p>

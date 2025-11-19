@@ -1,13 +1,10 @@
+@props(['categories', 'locations', 'locationCounts', 'categoryCounts'])
+
 <div class="filter-sidebar">
-
     <form action="{{ route('home') }}" method="GET">
-
         <!-- Kategorien -->
         <h3>Kategorien</h3>
         @foreach ($categories as $category)
-            @php
-                $count = $listings->where('category_id', $category->id)->count();
-            @endphp
             <label class="category-label">
                 <span class="category-left">
                     <input type="radio" name="category" value="{{ $category->id }}"
@@ -15,7 +12,7 @@
                     <span class="category-name">{{ $category->name }}</span>
                 </span>
                 <span class="category-dots"></span>
-                <span class="category-count">({{ $count }})</span>
+                <span class="category-count">({{ $categoryCounts[$category->id] ?? 0 }})</span>
             </label>
         @endforeach
         <hr />
@@ -34,7 +31,6 @@
             </label>
         @endforeach
         <hr />
-
 
         <!-- Preisbereich -->
         <h3>Preise</h3>
@@ -74,7 +70,6 @@
         </div>
         <hr class="last" />
 
-
         <!-- Filter-Button -->
         <div style="width: 60%; margin: 0 auto;">
             <button class="btn btn-danger" style="--btn-min-w: 7rem; --btn-pad: .75rem .5rem"
@@ -82,6 +77,5 @@
             <a class="btn btn-outline-secondary" style="--btn-min-w: 7rem;text-align:center"
                 href="{{ route('home') }}">Filter löschen</a>
         </div>
-
     </form>
 </div>

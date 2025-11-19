@@ -5,7 +5,7 @@
 @section('content')
     <h1>Alle Listings</h1>
     <div class="home-listings">
-        <x-filter-sidebar :categories="$categories" :locations="$locations" :listings="$listings" :locationCounts="$locationCounts" />
+        <x-filter-sidebar :categories="$categories" :locations="$locations" :locationCounts="$locationCounts" :categoryCounts="$categoryCounts" />
         @if (isset($listings) && $listings->isNotEmpty())
             <div class="listings-container">
                 @foreach ($listings as $listing)
@@ -13,6 +13,9 @@
                         <x-listing-card :listing="$listing" />
                     </div>
                 @endforeach
+                <div class="pagination-wrapper">
+                    {{ $listings->links('vendor.pagination.default') }}
+                </div>
             </div>
         @elseif($listings->isEmpty())
             <p>Keine Anzeigen gefunden.</p>

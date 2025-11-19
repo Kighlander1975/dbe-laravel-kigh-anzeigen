@@ -17,8 +17,14 @@ class ProfileController extends Controller
      */
     public function index(Request $request): View
     {
+        $user = $request->user();
+
+        // Listings mit Pagination holen
+        $listings = $user->listings()->paginate(4); // 10 Einträge pro Seite, kannst du anpassen
+
         return view('profile.index', [
-            'user' => $request->user(),
+            'user' => $user,
+            'listings' => $listings,
         ]);
     }
     /**

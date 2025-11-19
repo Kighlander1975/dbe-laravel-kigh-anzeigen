@@ -6,6 +6,7 @@
     'accessorData' => [],
     'customerArray' => null,
     'redactSensitive' => true,
+    'favoritesCount' => 0, // Neuer Parameter mit Standardwert 0
 ])
 
 @php
@@ -147,7 +148,7 @@
                                         @if ($nameLastInitial)
                                             {{ ' ' . $nameLastInitial }}
                                         @endif
-                                        
+
                                     </div>
                                 @endguest
                             </div>
@@ -252,18 +253,44 @@
                 </div>
 
                 <div class="seller-action-buttons">
-                    {{-- Favorit: bleibt sichtbar (noch nicht scharf) --}}
-                    <button type="button" class="btn btn-outline-danger js-fav-toggle btn-inline btn-sizing"
-                        aria-label="Zu Favoriten hinzufügen" aria-pressed="false"
-                        data-heart-url="{{ asset('images/heart.svg') }}"
-                        data-heart-broken-url="{{ asset('images/heart-broken.svg') }}" style="--btn-min-w: 8rem;">
-                        <span class="js-fav-icon icon-mask" aria-hidden="true"
-                            style="
-                                -webkit-mask-image: url('{{ asset('images/heart.svg') }}');
-                                mask-image: url('{{ asset('images/heart.svg') }}');
-                            "></span>
-                        <span class="js-fav-text">Favorit</span>
-                    </button>
+
+                    @if (Auth::check())
+                        {{-- Favorit-Button für eingeloggte Benutzer --}}
+                        @php
+                            $isFavorite = Auth::user()->favorites()->where('listing_id', $listing->id)->exists();
+                        @endphp
+                        <button type="button"
+                            class="btn btn-{{ $isFavorite ? 'danger' : 'outline-danger' }} js-fav-toggle btn-inline btn-sizing"
+                            aria-label="{{ $isFavorite ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen' }}"
+                            aria-pressed="{{ $isFavorite ? 'true' : 'false' }}"
+                            data-heart-url="{{ asset('images/heart.svg') }}"
+                            data-heart-broken-url="{{ asset('images/heart-broken.svg') }}"
+                            data-listing-id="{{ $listing->id }}" data-is-authenticated="true"
+                            style="--btn-min-w: 8rem;">
+                            <span class="js-fav-icon icon-mask" aria-hidden="true"
+                                style="
+                                    -webkit-mask-image: url('{{ asset($isFavorite ? 'images/heart-broken.svg' : 'images/heart.svg') }}');
+                                    mask-image: url('{{ asset($isFavorite ? 'images/heart-broken.svg' : 'images/heart.svg') }}');
+                                ">
+                            </span>
+                            <span class="js-fav-text">{{ $isFavorite ? 'Entfernen' : 'Favorit' }}</span>
+                        </button>
+                    @else
+                        {{-- Login-Button für nicht eingeloggte Benutzer --}}
+                        <a href="{{ route('login') }}"
+                            class="btn btn-outline-danger btn-inline btn-sizing js-fav-toggle-login"
+                            style="--btn-min-w: 8rem;">
+                            <span class="icon-mask" aria-hidden="true"
+                                style="
+                                    -webkit-mask-image: url('{{ asset('images/heart.svg') }}');
+                                    mask-image: url('{{ asset('images/heart.svg') }}');
+                                ">
+                            </span>
+                            <span>Favorit</span>
+                        </a>
+                    @endif
+
+
 
                     {{-- Kontakt: für Gäste -> Login; für Auth -> Platzhalter-Action (später Ziel ergänzen) --}}
                     @guest
@@ -320,12 +347,9 @@
             </div>
 
             <div class="meta-item meta-favorites">
-                <span class="meta-ico" aria-hidden="true" role="img">
-                    <img src="{{ asset('images/people.svg') }}" alt="" width="16" height="16"
-                        loading="lazy" />
-                </span>
-                1 Person/en interessiert
+                @include('partials.favorites-count', ['favoritesCount' => $favoritesCount])
             </div>
+
         </div>
 
         <div class="listing-description">{{ $listing->beschreibung }}</div>

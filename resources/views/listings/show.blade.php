@@ -6,8 +6,7 @@
 
     <!-- <img src="{{ $listing->first_image_url }}" alt="{{ $listing->name }}" width="400"> -->
 
-    {{-- Dump-Komponente mit allen Rohdaten --}}
-    <x-listing-show-details :listing="$listing" :customer="$customer" />
+    <x-listing-show-details :listing="$listing" :customer="$customer" :favorites-count="$favoritesCount" />
 
     @php
         $fallback = route('home');
@@ -33,6 +32,6 @@
         }
     @endphp
 
-    <a  href="{{ $href }}" class="btn btn-outline-primary back-link">← Zurück zur Übersicht</a>
+    <a href="{{ $href }}" class="btn btn-outline-primary back-link">← Zurück zur Übersicht</a>
 
 @endsection

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use App\Models\Listing;
 use Illuminate\Support\Facades\DB;
 use App\Models\ListingImage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -85,38 +87,78 @@ class ListingController extends Controller
             ->get()
             ->pluck('location');
 
-        // Effiziente Methode zur Zählung der Listings pro Ort
-        $locationCountsQuery = Listing::join('customers', 'listings.customer_id', '=', 'customers.id')
-            ->select(DB::raw("CONCAT(customers.plz, ' ', customers.ort) as location"), DB::raw('count(*) as count'))
-            ->groupBy('customers.plz', 'customers.ort');
+        // Basis-Query für Zählungen erstellen
+        $baseCountQuery = Listing::query()->join('customers', 'listings.customer_id', '=', 'customers.id');
 
-        // Anwenden der Filter auf die Zählung, wenn vorhanden
-        if ($request->filled('category')) {
-            $locationCountsQuery->where('category_id', (int) $request->category);
+        // Anwenden der gemeinsamen Filter auf die Basis-Zählabfrage
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $baseCountQuery->where(function ($q) use ($searchTerm) {
+                $q->where('listings.name', 'LIKE', $searchTerm)
+                    ->orWhere('listings.beschreibung', 'LIKE', $searchTerm);
+            });
+        }
+
+        if ($request->filled('search_location')) {
+            $baseCountQuery->where('customers.ort', 'LIKE', '%' . $request->search_location . '%');
         }
 
         if ($request->filled('min_price') && is_numeric($request->min_price)) {
-            $locationCountsQuery->where('preis', '>=', (float) $request->min_price);
+            $baseCountQuery->where('preis', '>=', (float) $request->min_price);
         }
 
         if ($request->filled('max_price') && is_numeric($request->max_price)) {
-            $locationCountsQuery->where('preis', '<=', (float) $request->max_price);
+            $baseCountQuery->where('preis', '<=', (float) $request->max_price);
         }
 
         if ($request->filled('price_range')) {
             $prices = explode('-', $request->price_range);
             if (count($prices) == 2) {
-                $locationCountsQuery->whereBetween('preis', [(float) $prices[0], (float) $prices[1]]);
+                $baseCountQuery->whereBetween('preis', [(float) $prices[0], (float) $prices[1]]);
             }
         }
 
-        $locationCounts = $locationCountsQuery->pluck('count', 'location')->toArray();
+        // Kategorie-Filter nur anwenden, wenn wir Standorte zählen
+        $locationCountQuery = clone $baseCountQuery;
+        if ($request->filled('category')) {
+            $locationCountQuery->where('category_id', (int) $request->category);
+        }
 
-        $listings = $query->orderBy('listings.created_at', 'desc')->select('listings.*')->get();
+        // Standort-Filter nur anwenden, wenn wir Kategorien zählen
+        $categoryCountQuery = clone $baseCountQuery;
+        if ($request->filled('location')) {
+            $locationParts = explode(' ', $request->location, 2);
+            if (count($locationParts) == 2) {
+                $categoryCountQuery->where('customers.plz', $locationParts[0])
+                    ->where('customers.ort', $locationParts[1]);
+            } else {
+                $categoryCountQuery->where('customers.ort', $request->location);
+            }
+        }
+
+        // Zählung der Listings pro Kategorie
+        $categoryCounts = $categoryCountQuery->select('category_id', DB::raw('count(*) as count'))
+            ->groupBy('category_id')
+            ->pluck('count', 'category_id')
+            ->toArray();
+
+        // Zählung der Listings pro Ort
+        $locationCounts = $locationCountQuery->select(DB::raw("CONCAT(customers.plz, ' ', customers.ort) as location"), DB::raw('count(*) as count'))
+            ->groupBy('customers.plz', 'customers.ort')
+            ->pluck('count', 'location')
+            ->toArray();
+
+        // Paginierte Ergebnisse für die Anzeige
+        $listings = $query->orderBy('listings.created_at', 'desc')
+            ->select('listings.*')
+            ->paginate(16)
+            ->appends($request->all());
+
         $categories = Category::all();
 
-        return view('listings.index', compact('listings', 'categories', 'locations', 'locationCounts'));
+        return view('listings.index', compact('listings', 'categories', 'locations', 'locationCounts', 'categoryCounts'));
     }
+
 
 
     /**
@@ -186,8 +228,19 @@ class ListingController extends Controller
             $customer = DB::table('customers')->where('id', $listing->customer_id)->first();
         }
 
-        return view('listings.show', compact('listing', 'customer'));
+        // Anzahl der Favoriten für dieses Listing ermitteln
+        // Variante 1: Über die Beziehung im Model
+        $favoritesCount = $listing->favoritedBy()->count();
+
+        // Variante 2: Direkt über das Favorite-Model
+        // $favoritesCount = Favorite::where('listing_id', $listing->id)->count();
+
+        // Debug-Ausgabe (optional)
+        // dump($favoritesCount);
+
+        return view('listings.show', compact('listing', 'customer', 'favoritesCount'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -523,5 +576,40 @@ class ListingController extends Controller
             'images' => $images,
             'count'  => $listing->images()->count(),
         ]);
+    }
+
+    public function toggleFavorite($id)
+    {
+        // Hier holen wir das User-Objekt, nicht nur die ID
+        $user = auth()->user();
+        $listing = Listing::findOrFail($id);
+
+        if ($user->favorites()->where('listing_id', $id)->exists()) {
+            $user->favorites()->detach($listing);
+            $isFavorited = false;
+        } else {
+            $user->favorites()->attach($listing);
+            $isFavorited = true;
+        }
+
+        // Aktuelle Anzahl der Favoriten NACH der Änderung ermitteln
+        $favoritesCount = $listing->favoritedBy()->count();
+
+        // HTML für die Favoriten-Anzahl generieren
+        $favoritesHtml = view('partials.favorites-count', [
+            'favoritesCount' => $favoritesCount
+        ])->render();
+
+        // Bei AJAX-Anfragen JSON zurückgeben
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'isFavorited' => $isFavorited,
+                'favoritesCount' => $favoritesCount,
+                'favoritesHtml' => $favoritesHtml
+            ]);
+        }
+
+        return redirect()->back();
     }
 }

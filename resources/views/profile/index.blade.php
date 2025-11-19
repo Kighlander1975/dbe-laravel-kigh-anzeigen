@@ -84,9 +84,9 @@
 
         <div class="profile-listings">
             <h2>Meine Anzeigen</h2>
-            @if (auth()->user()->listings->count() > 0)
+            @if ($listings->count() > 0)
                 <div class="listings-container">
-                    @foreach (auth()->user()->listings as $listing)
+                    @foreach ($listings as $listing)
                         <div class="with-action-buttons">
                             <x-listing-card :listing="$listing" />
                             @if (auth()->check() && auth()->user()->id === $listing->customer_id)
@@ -107,19 +107,28 @@
                         </div>
                     @endforeach
                 </div>
+
+                <!-- Pagination Links hinzufügen -->
+                <div class="pagination-wrapper">
+                    {{ $listings->links('vendor.pagination.default') }}
+                </div>
             @else
                 Du hast keine Anzeigen geschaltet.
             @endif
         </div>
+
+
         <div class="profile-favorites">
             <h2>Meine Favoriten</h2>
             @if (auth()->user()->favorites->count() > 0)
-                @foreach (auth()->user()->favorites as $listing)
-                    <x-listing-card :listing="$listing" />
-                @endforeach
-            @else
-                Du hast keine Favoriten festgelegt.
+                <div class="listings-container">
+                    @foreach (auth()->user()->favorites as $listing)
+                        <x-listing-card :listing="$listing" />
+                    @endforeach
+                @else
+                    Du hast keine Favoriten festgelegt.
             @endif
         </div>
+    </div>
     </div>
 @endsection

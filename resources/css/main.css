@@ -1,5 +1,6 @@
 main {
     width: 95%;
+    max-width: 1800px;
     margin: 0 auto;
 }
 main > p {
@@ -493,9 +494,22 @@ a.btn {
     display: flex;
     width: 100%;
     gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.home-listings > nav {
+    flex-basis: 100%;
+    text-align: center;
+    margin-top: 1.25rem;
+}
+.home-listings > nav > ul {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    justify-content: center;
 }
 .home-listings .filter-sidebar {
-    width: 20%;
+    width: 18%;
 }
 .home-listings form {
     display: flex;
@@ -597,4 +611,104 @@ hr.last {
     margin-bottom: 20px;
     border: 0;
     border-top: 1px solid #eee;
+}
+
+.pagination-wrapper {
+    grid-column: 1 / -1; /* Nimmt die volle Breite ein */
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* Hauptcontainer der Paginierung */
+.home-listings .listings-container .pagination-wrapper nav,
+.profile-listings .pagination-wrapper > nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Paginierungsliste */
+.home-listings .listings-container .pagination-wrapper nav ul,
+.profile-listings .pagination-wrapper > nav ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Einzelne Listenelemente */
+.home-listings .listings-container .pagination-wrapper nav ul li,
+.profile-listings .pagination-wrapper > nav ul li {
+    margin: 0;
+    padding: 0;
+}
+
+/* Allgemeine Styles für Links und Spans */
+.home-listings .listings-container .pagination-wrapper nav ul li > *,
+.profile-listings .pagination-wrapper > nav ul li > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+/* Normale Links */
+.home-listings .listings-container .pagination-wrapper nav ul li a,
+.profile-listings .pagination-wrapper > nav ul li a {
+    background-color: #f3f9f9;
+    color: #2c7a7a;
+    border: 1px solid #d1eded;
+}
+
+/* Hover-Effekt für Links */
+.home-listings .listings-container .pagination-wrapper nav ul li a:hover,
+.profile-listings .pagination-wrapper > nav ul li a:hover {
+    background-color: #d1eded;
+    color: #1a6666;
+}
+
+/* Aktiver Link/Span */
+.home-listings .listings-container .pagination-wrapper nav ul li.active span,
+.profile-listings .pagination-wrapper > nav ul li.active span {
+    background-color: #1cb1b1;
+    color: white;
+    border: 1px solid #1cb1b1;
+}
+
+/* Deaktivierte Links/Spans */
+.home-listings .listings-container .pagination-wrapper nav ul li.disabled span,
+.profile-listings .pagination-wrapper > nav ul li.disabled span {
+    background-color: #f9fafa;
+    color: #8fbfbf;
+    border: 1px solid #e5f0f0;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Pfeile (Vorherige/Nächste Seite) */
+.home-listings .listings-container .pagination-wrapper nav ul li:first-child a,
+.home-listings .listings-container .pagination-wrapper nav ul li:last-child a,
+.profile-listings .pagination-wrapper > nav ul li:first-child a,
+.profile-listings .pagination-wrapper > nav ul li:last-child a {
+    font-weight: bold;
+}
+
+/* Ellipsis (...) */
+.home-listings .listings-container .pagination-wrapper nav ul li span.dots,
+.profile-listings .pagination-wrapper > nav ul li span.dots {
+    background: transparent;
+    border: none;
+    color: #5a9999;
 }

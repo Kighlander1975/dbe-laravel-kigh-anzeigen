@@ -73,9 +73,18 @@ class Customer extends Authenticatable
         return $current >= $required;
     }
 
-    public function isCustomer(): bool { return $this->isRole('customer'); }
-    public function isAdmin(): bool { return $this->isRole('admin'); }
-    public function isGuest(): bool { return $this->isRole('guest'); }
+    public function isCustomer(): bool
+    {
+        return $this->isRole('customer');
+    }
+    public function isAdmin(): bool
+    {
+        return $this->isRole('admin');
+    }
+    public function isGuest(): bool
+    {
+        return $this->isRole('guest');
+    }
 
     /**
      * Beziehungen
@@ -87,6 +96,6 @@ class Customer extends Authenticatable
 
     public function favorites()
     {
-        return $this->belongsToMany(Listing::class, 'favorites');
+        return $this->belongsToMany(Listing::class, 'favorites', 'customer_id', 'listing_id');
     }
 }

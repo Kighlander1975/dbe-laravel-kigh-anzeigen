@@ -91,7 +91,7 @@ class Listing extends Model
      */
     public function favoritedBy()
     {
-        return $this->belongsToMany(Customer::class, 'favorites');
+        return $this->belongsToMany(Customer::class, 'favorites', 'listing_id', 'customer_id');
     }
 
     /**

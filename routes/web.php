@@ -34,6 +34,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
+    Route::post('/listings/{id}/favorite', [ListingController::class, 'toggleFavorite'])
+    ->middleware('auth')
+    ->name('listings.favorite');
+
     // Admin
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
