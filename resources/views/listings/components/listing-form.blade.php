@@ -91,7 +91,7 @@
                     @isset($listing)
                         data-existing-url="{{ route('listings.images.index', $listing->id) }}"
                         data-delete-url="{{ route('listings.images.delete', ['listing' => $listing->id, 'image' => ':id']) }}"
-                        data-restore-url="{{ route('listings.images.restore', ['listing' => $listing->id, 'imageId' => ':id']) }}"
+                        data-restore-url="{{ route('listings.images.restore', ['listing' => $listing->id, 'image' => ':id']) }}"
                         data-sort-url="{{ route('listings.images.sort', $listing->id) }}"
                         data-upload-url="{{ route('listings.images.upload', $listing->id) }}"
                     @endisset>

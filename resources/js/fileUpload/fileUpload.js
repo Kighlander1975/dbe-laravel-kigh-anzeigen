@@ -1102,60 +1102,15 @@ export function initFileUpload(container = null, userOptions = {}) {
             credentials: "same-origin",
         });
 
-        if (res.ok) {
-            // Nach erfolgreichem Löschen die aktualisierten Daten vom Server holen
-            if (deleteUrlTpl) {
-                try {
-                    const updatedDataResponse = await fetch(indexUrlTpl, {
-                        method: "GET",
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            Accept: "application/json",
-                        },
-                        credentials: "same-origin",
-                    });
-
-                    if (updatedDataResponse.ok) {
-                        const updatedData = await updatedDataResponse.json();
-
-                        // Ersetze den existingState mit den aktualisierten Daten vom Server
-                        existingState = updatedData.images || [];
-
-                        // Aktualisiere mixedOrderState
-                        mixedOrderState.length = 0;
-
-                        // Füge zuerst alle bestehenden Bilder hinzu
-                        existingState.forEach((img, idx) => {
-                            mixedOrderState.push({
-                                type: "existing",
-                                id: img.id,
-                                position: idx,
-                            });
-                        });
-
-                        // Füge dann alle neuen Dateien hinzu
-                        filesState.forEach((file, idx) => {
-                            mixedOrderState.push({
-                                type: "new",
-                                index: idx,
-                                position: existingState.length + idx,
-                            });
-                        });
-
-                        // UI aktualisieren
-                        renderExisting();
-                        renderTags();
-                        liveUpdateCounter(true);
-                        announce("Bild gelöscht.");
-                        return;
-                    }
-                } catch (error) {
-                    console.error(
-                        "Fehler beim Aktualisieren der Bilddaten:",
-                        error
-                    );
-                }
+        if (!res.ok) {
+            const data = await safeJson(res);
+            if (options.debug) {
+                console.error(
+                    `FileUpload: Fehler beim Löschen des Bildes:`,
+                    data?.message || "Unbekannter Fehler"
+                );
             }
+            throw new Error(data?.message || "Löschen fehlgeschlagen.");
         }
 
         // Nach erfolgreichem Löschen

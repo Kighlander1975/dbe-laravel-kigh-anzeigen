@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/listings/{listing}/images', [ListingController::class, 'uploadImages'])->name('listings.images.upload');
     Route::post('/listings/{listing}/images/sort', [ListingController::class, 'sortImages'])->name('listings.images.sort');
     Route::delete('/listings/{listing}/images/{image}', [ListingController::class, 'deleteImage'])->name('listings.images.delete');
-    Route::post('/listings/{listing}/images/{imageId}/restore', [ListingController::class, 'restoreImage'])->name('listings.images.restore');
+    Route::post('/listings/{listing}/images/{image}/restore', [ListingController::class, 'restoreImage'])->name('listings.images.restore');
 
     // Profil
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
