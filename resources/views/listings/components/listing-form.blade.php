@@ -10,7 +10,7 @@
     $imagesCount = $showImagesInfo && $listing ? $listing->images->count() : null;
 @endphp
 
-<form action="{{ $action }}" method="POST"
+<form action="{{ $action }}" id="listing-form" method="POST"
     @isset($enctype) enctype="{{ $enctype }}" @endisset>
     @csrf
     @if (strtoupper($method) === 'PUT' || strtoupper($method) === 'PATCH')
@@ -72,10 +72,58 @@
                 <textarea id="beschreibung" name="beschreibung">{{ old('beschreibung', $listing->beschreibung ?? '') }}</textarea>
             </div>
 
+            {{-- Neuer Abschnitt: Medien (Full-Width) --}}
+            <div class="listing-section">
+                <h2 class="section-title">Medien</h2>
+
+                <div class="upload-head">
+                    <strong>Dateien hochladen</strong>
+                    <span class="upload-count">
+                        (@if (!is_null($imagesCount))
+                            {{ $imagesCount }}
+                        @else
+                            0
+                        @endif/10 vorhanden)
+                    </span>
+                </div>
+
+                <div class="dropzone"
+                    @isset($listing)
+                        data-existing-url="{{ route('listings.images.index', $listing->id) }}"
+                        data-delete-url="{{ route('listings.images.delete', ['listing' => $listing->id, 'image' => ':id']) }}"
+                        data-restore-url="{{ route('listings.images.restore', ['listing' => $listing->id, 'imageId' => ':id']) }}"
+                        data-sort-url="{{ route('listings.images.sort', $listing->id) }}"
+                        data-upload-url="{{ route('listings.images.upload', $listing->id) }}"
+                    @endisset>
+                    <input type="file" name="images[]" id="images" multiple
+                        accept="image/jpeg,image/png,image/webp" class="visually-hidden">
+                    <button type="button" class="btn btn-outline-primary select-files"
+                        onclick="document.getElementById('images').click()">
+                        Dateien auswählen
+                    </button>
+                    <span class="dropzone-hint">… oder hierher ziehen</span>
+                </div>
+
+                <!-- Hier die aria-live Region einfügen -->
+                <div class="upload-aria-live initial" aria-live="polite" role="status">Alles OK</div>
+
+                <div class="upload-block fw">
+                    <div class="file-tags" id="file-tags"></div>
+                </div>
+
+                {{-- Optional sichtbar nur bei EDIT (wenn Daten vorhanden sind) --}}
+                <div class="existing-images" id="existing-images"></div>
+
+                <div class="upload-legend">
+                    <small>Erlaubt: JPG, PNG, WEBP. Max. 10 Dateien, je bis 2 MB.</small>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary" style="--btn-radius: 22px; --btn-pad: .75rem .5rem;">
                 <strong>{{ $submitLabel }}</strong>
             </button>
         </div>
-        <a class="btn btn-outline-primary" style="text-align: center;" href="{{ route('profile') }}">Zurück zur Übersicht</a>
+        <a class="btn btn-outline-primary" style="text-align: center;" href="{{ route('profile') }}">Zurück zur
+            Übersicht</a>
     </div>
 </form>

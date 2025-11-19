@@ -10,6 +10,7 @@
     'listing' => $listing,
     'showImagesInfo' => true,
     'submitLabel' => 'Änderungen speichern',
+    'enctype' => 'multipart/form-data',
     'requiredCategory' => true,
   ])
 @endsection

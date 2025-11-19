@@ -4,7 +4,7 @@
         $firstImage = $listing->images->first();
     @endphp
 
-    <img src="{{ $firstImage ? asset('storage/listing_images/' . $firstImage->image_path) : asset('images/placeholder.jpg') }}"
+    <img src="{{ $firstImage ? asset('storage/listings_images/' . $firstImage->image_path) : asset('images/placeholder.jpg') }}"
         alt="{{ $listing->name }}" width="400" />
     <p>{{ $listing->beschreibung }}</p>
     <p>Preis: {{ number_format($listing->preis, 2) }} €</p>

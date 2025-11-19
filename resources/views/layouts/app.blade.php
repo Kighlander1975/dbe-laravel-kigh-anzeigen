@@ -15,6 +15,7 @@
         'resources/css/components/show_listing.css',
         'resources/css/auth.css',
         'resources/css/profile.css',
+        'resources/css/components/fileUpload.css',
         'resources/css/main.css'
     ])
 </head>

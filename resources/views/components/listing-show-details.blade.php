@@ -44,17 +44,17 @@
         if (empty($path)) {
             return null;
         }
-        return asset('storage/listing_images/' . ltrim($path, '/'));
+        return asset('storage/listings_images/' . ltrim($path, '/'));
     };
 @endphp
 
 <section class="listing-details">
     <div class="row-1">
 
-        <div class="current-picture" data-images='@json(collect($imagesArray)->map(fn($img) => ['src' => asset('storage/listing_images/' . ($img['image_path'] ?? '')), 'alt' => '']))'
+        <div class="current-picture" data-images='@json(collect($imagesArray)->map(fn($img) => ['src' => asset('storage/listings_images/' . ($img['image_path'] ?? '')), 'alt' => '']))'
             data-chevron="{{ asset('images/chevron-right.svg') }}">
             @if ($firstImage)
-                <img src="{{ asset('storage/listing_images/' . $firstImage) }}" alt="" />
+                <img src="{{ asset('storage/listings_images/' . $firstImage) }}" alt="" />
             @else
                 <img src="{{ asset('images/placeholder.jpg') }}" alt="Platzhalter" />
             @endif

@@ -11,6 +11,6 @@
     'showImagesInfo' => false,
     'submitLabel' => 'Listing erstellen',
     'enctype' => 'multipart/form-data',
-    'requiredCategory' => false,
+    'requiredCategory' => true,
   ])
 @endsection
